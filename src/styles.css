@@ -59,6 +59,32 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Voyage Estimator tokens */
+  --color-ve-app: var(--ve-app);
+  --color-ve-toolbar: var(--ve-toolbar);
+  --color-ve-border: var(--ve-border);
+  --color-ve-text: var(--ve-text);
+  --color-ve-label: var(--ve-label);
+  --color-ve-accent: var(--ve-accent);
+  --color-ve-headerBg: var(--ve-header-bg);
+  --color-ve-sectionBg: var(--ve-section-bg);
+  --color-ve-rowHover: var(--ve-row-hover);
+  --color-ve-disabled: var(--ve-disabled);
+  --color-ve-totalBg: var(--ve-total-bg);
+}
+
+@layer components {
+  .ve-tool-btn {
+    display: inline-flex;
+    align-items: center;
+    height: 26px;
+    padding: 0 4px;
+    color: var(--ve-text);
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .ve-tool-btn:hover { background: color-mix(in oklab, var(--ve-accent) 8%, transparent); }
 }
 
 :root {
@@ -95,6 +121,19 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+
+  /* Voyage Estimator palette (light, enterprise data UI) */
+  --ve-app: oklch(0.985 0.002 247);
+  --ve-toolbar: oklch(0.98 0.003 247);
+  --ve-border: oklch(0.88 0.01 247);
+  --ve-text: oklch(0.25 0.02 247);
+  --ve-label: oklch(0.5 0.02 247);
+  --ve-accent: oklch(0.55 0.16 250);
+  --ve-header-bg: oklch(0.955 0.005 247);
+  --ve-section-bg: oklch(0.945 0.005 247);
+  --ve-row-hover: oklch(0.965 0.012 240);
+  --ve-disabled: oklch(0.92 0.008 247);
+  --ve-total-bg: oklch(0.96 0.006 247);
 }
 
 .dark {
