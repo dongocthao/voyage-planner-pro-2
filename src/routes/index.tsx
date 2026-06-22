@@ -204,46 +204,37 @@ function HeaderSection() {
 
 /* ---------- Cargoes ---------- */
 
-const cargoRows = [
-  { n: 1, id: "", group: "LIQUID", qty: "3,000", unit: "MT", opt: "10.00", optType: "MOLOO", t: "F", frt: "37.0000", lump: "0.00", comm: "6.25", chtr: "RICHSTRONG", curr: "USD", exch: "1.000000" },
-  { n: 2, id: "", group: "LIQUID", qty: "5,000", unit: "MT", opt: "0.00", optType: "MOLOO", t: "L", frt: "25.0000", lump: "200,000.00", comm: "3.75", chtr: "WUCHAN", curr: "USD", exch: "1.000000" },
+const cargoColumns: Column[] = [
+  { id: "n", label: "N", width: 40, align: "right" },
+  { id: "id", label: "ID", width: 60 },
+  { id: "group", label: "Group", width: 110 },
+  { id: "qty", label: "C/P Qty", width: 80, align: "right" },
+  { id: "unit", label: "Unit", width: 60 },
+  { id: "opt", label: "Opt %", width: 70, align: "right" },
+  { id: "optType", label: "Opt Type", width: 80 },
+  { id: "t", label: "T", width: 40 },
+  { id: "frt", label: "Frt Rate", width: 80, align: "right" },
+  { id: "lump", label: "Lumpsum", width: 100, align: "right" },
+  { id: "comm", label: "Comm%", width: 70, align: "right" },
+  { id: "chtr", label: "Charterer", width: 120 },
+  { id: "curr", label: "Curr", width: 60 },
+  { id: "exch", label: "Exch Rate", width: 80 },
+];
+const cargoData: Row[] = [
+  { __id: "c1", n: "1", id: "", group: "LIQUID", qty: "3,000", unit: "MT", opt: "10.00", optType: "MOLOO", t: "F", frt: "37.0000", lump: "0.00", comm: "6.25", chtr: "RICHSTRONG", curr: "USD", exch: "1.000000" },
+  { __id: "c2", n: "2", id: "", group: "LIQUID", qty: "5,000", unit: "MT", opt: "0.00", optType: "MOLOO", t: "L", frt: "25.0000", lump: "200,000.00", comm: "3.75", chtr: "WUCHAN", curr: "USD", exch: "1.000000" },
 ];
 
 function CargoesSection() {
-  const cols = "grid-cols-[28px_40px_60px_120px_80px_60px_70px_80px_30px_80px_100px_70px_120px_60px_80px]";
   return (
     <div className="border-b border-ve-border bg-white">
-      <div className="border-b border-ve-border bg-ve-sectionBg px-3 py-1 text-[13px] font-semibold text-ve-text">
-        Cargoes
-      </div>
-      <div className={`grid ${cols} bg-ve-headerBg text-[11px] font-semibold`}>
-        {["…","N","ID","Group","C/P Qty","Unit","Opt %","Opt Type","T","Frt Rate","Lumpsum","Comm%","Charterer","Curr","Exch Rate"].map((h, i) => (
-          <div key={i} className="border-r border-ve-border px-1.5 py-1 last:border-r-0">{h}</div>
-        ))}
-      </div>
-      {cargoRows.map((r) => (
-        <div key={r.n} className={`grid ${cols} border-t border-ve-border text-[12px] hover:bg-ve-rowHover`}>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-ve-label">⋯</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.n}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px]">{r.id}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px]">{r.group}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.qty}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px]">{r.unit}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.opt}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px]">{r.optType}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px]">{r.t}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.frt}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.lump}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.comm}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px]">{r.chtr}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px]">{r.curr}</div>
-          <div className="px-1.5 py-[3px] text-right">{r.exch}</div>
-        </div>
-      ))}
-      <div className="border-t border-ve-border py-1 text-center text-[12px]">
-        <button className="text-ve-accent hover:underline">Add New Row</button>
-      </div>
-      <div className="border-t border-ve-border px-3 py-1 text-right text-[12px] font-semibold">8,000</div>
+      <EditableTable
+        storageKey="cargoes"
+        title="Cargoes"
+        initialColumns={cargoColumns}
+        initialRows={cargoData}
+      />
+      <div className="px-3 py-1 text-right text-[12px] font-semibold">Total: 8,000</div>
     </div>
   );
 }
@@ -254,22 +245,37 @@ const itineraryTabs = [
   "Cargo", "Draft/Restrictions", "Vessel Draft", "Charterer", "Port/Date", "Bunkers", "Port/Date Group",
 ];
 
-const itineraryRows = [
-  { port: "DUMAI", miles: "", wf: "7.00", draft: "", unit: "C", load: "Summer Salt", sal: "1.025", ifoQty: "", ifoPrc: "", lsfQty: "", lsfPrc: "", curr: "USD", portExp: "", baseExp: "", grp: "", gs: "", grade: "" },
-  { port: "SINGAPORE STRAIT", miles: "208", wf: "7.00", draft: "", unit: "P", load: "Summer Salt", sal: "1.025", ifoQty: "", ifoPrc: "", lsfQty: "", lsfPrc: "", curr: "USD", portExp: "", baseExp: "", grp: "", gs: "", grade: "", muted: true },
-  { port: "YANTAI", miles: "2,586", wf: "7.00", draft: "", unit: "L", load: "Summer Salt", sal: "1.025", ifoQty: "", ifoPrc: "", lsfQty: "", lsfPrc: "", curr: "USD", portExp: "10,000", baseExp: "10,000", grp: "1 : LIQUID", gs: "1", grade: "SOY" },
-  { port: "YOSU", miles: "444", wf: "0.00", draft: "", unit: "L", load: "Summer Salt", sal: "1.025", ifoQty: "", ifoPrc: "", lsfQty: "", lsfPrc: "", curr: "USD", portExp: "25,000", baseExp: "25,000", grp: "2 : LIQUID", gs: "1", grade: "MIXE" },
-  { port: "HONG KONG", miles: "1,147", wf: "7.00", draft: "", unit: "D", load: "Summer Salt", sal: "1.025", ifoQty: "", ifoPrc: "", lsfQty: "", lsfPrc: "", curr: "USD", portExp: "3,500", baseExp: "3,500", grp: "1 : LIQUID", gs: "1", grade: "SOY" },
-  { port: "DONGGUAN", miles: "58", wf: "7.00", draft: "", unit: "D", load: "Summer Salt", sal: "1.025", ifoQty: "", ifoPrc: "", lsfQty: "", lsfPrc: "", curr: "USD", portExp: "40,000", baseExp: "40,000", grp: "2 : LIQUID", gs: "1", grade: "MIXE" },
+const itineraryColumns: Column[] = [
+  { id: "port", label: "Port", width: 140 },
+  { id: "miles", label: "Miles", width: 60, align: "right" },
+  { id: "wf", label: "WF%", width: 50, align: "right" },
+  { id: "draft", label: "Draft", width: 60 },
+  { id: "unit", label: "Unit", width: 40 },
+  { id: "load", label: "Loadline", width: 90 },
+  { id: "sal", label: "Salinity", width: 60, align: "right" },
+  { id: "ifoQty", label: "IFO Qty", width: 70, align: "right" },
+  { id: "ifoPrc", label: "IFO Prc", width: 70, align: "right" },
+  { id: "lsfQty", label: "LSF Qty", width: 70, align: "right" },
+  { id: "lsfPrc", label: "LSF Prc", width: 70, align: "right" },
+  { id: "curr", label: "Curr", width: 50 },
+  { id: "portExp", label: "PortExp", width: 70, align: "right" },
+  { id: "baseExp", label: "BaseExp", width: 70, align: "right" },
+  { id: "grp", label: "Cargo Grp", width: 90 },
+  { id: "gs", label: "GS", width: 40 },
+  { id: "grade", label: "Grade", width: 70 },
+];
+const itineraryData: Row[] = [
+  { __id: "i1", port: "DUMAI", miles: "", wf: "7.00", draft: "", unit: "C", load: "Summer Salt", sal: "1.025", ifoQty: "", ifoPrc: "", lsfQty: "", lsfPrc: "", curr: "USD", portExp: "", baseExp: "", grp: "", gs: "", grade: "" },
+  { __id: "i2", port: "SINGAPORE STRAIT", miles: "208", wf: "7.00", draft: "", unit: "P", load: "Summer Salt", sal: "1.025", ifoQty: "", ifoPrc: "", lsfQty: "", lsfPrc: "", curr: "USD", portExp: "", baseExp: "", grp: "", gs: "", grade: "" },
+  { __id: "i3", port: "YANTAI", miles: "2,586", wf: "7.00", draft: "", unit: "L", load: "Summer Salt", sal: "1.025", ifoQty: "", ifoPrc: "", lsfQty: "", lsfPrc: "", curr: "USD", portExp: "10,000", baseExp: "10,000", grp: "1 : LIQUID", gs: "1", grade: "SOY" },
+  { __id: "i4", port: "YOSU", miles: "444", wf: "0.00", draft: "", unit: "L", load: "Summer Salt", sal: "1.025", ifoQty: "", ifoPrc: "", lsfQty: "", lsfPrc: "", curr: "USD", portExp: "25,000", baseExp: "25,000", grp: "2 : LIQUID", gs: "1", grade: "MIXE" },
+  { __id: "i5", port: "HONG KONG", miles: "1,147", wf: "7.00", draft: "", unit: "D", load: "Summer Salt", sal: "1.025", ifoQty: "", ifoPrc: "", lsfQty: "", lsfPrc: "", curr: "USD", portExp: "3,500", baseExp: "3,500", grp: "1 : LIQUID", gs: "1", grade: "SOY" },
+  { __id: "i6", port: "DONGGUAN", miles: "58", wf: "7.00", draft: "", unit: "D", load: "Summer Salt", sal: "1.025", ifoQty: "", ifoPrc: "", lsfQty: "", lsfPrc: "", curr: "USD", portExp: "40,000", baseExp: "40,000", grp: "2 : LIQUID", gs: "1", grade: "MIXE" },
 ];
 
 function ItinerarySection() {
-  const cols = "grid-cols-[28px_140px_60px_50px_60px_40px_90px_60px_70px_70px_70px_70px_50px_70px_70px_90px_30px_60px]";
   return (
     <div className="bg-white">
-      <div className="border-b border-ve-border bg-ve-sectionBg px-3 py-1 text-[13px] font-semibold text-ve-text">
-        Itinerary
-      </div>
       <div className="flex border-b border-ve-border bg-white text-[12px]">
         {itineraryTabs.map((t, i) => (
           <button
@@ -280,45 +286,12 @@ function ItinerarySection() {
           </button>
         ))}
       </div>
-      <div className={`grid ${cols} bg-ve-headerBg text-[11px] font-semibold`}>
-        {["…","Port","Miles","WF%","Draft","Unit","Loadline","Salinity","IFO Qty","IFO Prc","LSF Qty","LSF Prc","Curr","PortExp","BaseExp","Cargo Grp","GS","Grade"].map((h, i) => (
-          <div key={i} className="border-r border-ve-border px-1.5 py-1 last:border-r-0">{h}</div>
-        ))}
-      </div>
-      {itineraryRows.map((r, idx) => (
-        <div
-          key={idx}
-          className={`grid ${cols} border-t border-ve-border text-[12px] hover:bg-ve-rowHover ${r.muted ? "text-ve-label" : ""}`}
-        >
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-ve-label">⋯</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] font-medium">{r.port}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.miles}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.wf}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px]">{r.draft}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px]">{r.unit}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px]">{r.load}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.sal}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.ifoQty}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.ifoPrc}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.lsfQty}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.lsfPrc}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px]">{r.curr}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.portExp}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.baseExp}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px]">{r.grp}</div>
-          <div className="border-r border-ve-border px-1.5 py-[3px] text-right">{r.gs}</div>
-          <div className="px-1.5 py-[3px]">{r.grade}</div>
-        </div>
-      ))}
-      <div className="grid grid-cols-[28px_140px_60px_1fr_70px_70px_1fr] border-t border-ve-border bg-ve-totalBg text-[12px] font-semibold">
-        <div className="border-r border-ve-border px-1.5 py-1" />
-        <div className="border-r border-ve-border px-1.5 py-1" />
-        <div className="border-r border-ve-border px-1.5 py-1 text-right">4,443</div>
-        <div className="border-r border-ve-border px-1.5 py-1" />
-        <div className="border-r border-ve-border px-1.5 py-1 text-right">78,500</div>
-        <div className="border-r border-ve-border px-1.5 py-1" />
-        <div className="px-1.5 py-1" />
-      </div>
+      <EditableTable
+        storageKey="itinerary"
+        title="Itinerary"
+        initialColumns={itineraryColumns}
+        initialRows={itineraryData}
+      />
 
       {/* Bunker Sensitivity */}
       <div className="border-t border-ve-border px-3 py-3">
@@ -338,6 +311,7 @@ function ItinerarySection() {
     </div>
   );
 }
+
 
 /* ---------- P&L Sidebar ---------- */
 
