@@ -117,11 +117,22 @@ function Toolbar() {
 
 /* ---------- Section: header form (Vessel + Bunkers grid) ---------- */
 
-const bunkerRows = [
-  { name: "IFO", price: "531.98", sBal: "12.00", sLad: "12.00", pLd: "5.00", pDis: "5.00", idle: "1.00" },
-  { name: "LSF", price: "550.00", sBal: "12.00", sLad: "12.00", pLd: "5.00", pDis: "5.00", idle: "1.00" },
-  { name: "MDO", price: "650.00", sBal: "0.10", sLad: "0.10", pLd: "2.00", pDis: "2.00", idle: "1.00" },
-  { name: "LSG", price: "700.00", sBal: "0.10", sLad: "0.10", pLd: "2.00", pDis: "2.00", idle: "1.00" },
+const bunkerColumns: Column[] = [
+  { id: "name", label: "Name", width: 70 },
+  { id: "symbol", label: "Symbol", width: 70 },
+  { id: "basis", label: "Basis", width: 70 },
+  { id: "price", label: "Price", width: 70, align: "right" },
+  { id: "sBal", label: "S Bal", width: 60, align: "right" },
+  { id: "sLad", label: "S Lad", width: 60, align: "right" },
+  { id: "pLd", label: "P Ld", width: 60, align: "right" },
+  { id: "pDis", label: "P Dis", width: 60, align: "right" },
+  { id: "idle", label: "Idle", width: 60, align: "right" },
+];
+const bunkerData: Row[] = [
+  { __id: "b1", name: "IFO", symbol: "", basis: "", price: "531.98", sBal: "12.00", sLad: "12.00", pLd: "5.00", pDis: "5.00", idle: "1.00" },
+  { __id: "b2", name: "LSF", symbol: "", basis: "", price: "550.00", sBal: "12.00", sLad: "12.00", pLd: "5.00", pDis: "5.00", idle: "1.00" },
+  { __id: "b3", name: "MDO", symbol: "", basis: "", price: "650.00", sBal: "0.10", sLad: "0.10", pLd: "2.00", pDis: "2.00", idle: "1.00" },
+  { __id: "b4", name: "LSG", symbol: "", basis: "", price: "700.00", sBal: "0.10", sLad: "0.10", pLd: "2.00", pDis: "2.00", idle: "1.00" },
 ];
 
 function HeaderSection() {
