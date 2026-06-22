@@ -6,12 +6,12 @@ import {
   Trash2,
   ChevronDown,
   FileText,
-  Calendar,
   Lock,
   RefreshCw,
   AlertTriangle,
   Globe,
 } from "lucide-react";
+import EditableTable, { type Column, type Row } from "@/components/EditableTable";
 
 export const Route = createFileRoute("/")({
   head: () => ({
