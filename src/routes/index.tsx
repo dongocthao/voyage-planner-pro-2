@@ -173,53 +173,18 @@ function HeaderSection() {
         <Field label="Load Line Routing" labelWidth="w-32"><Input value="Default" /></Field>
       </div>
 
-      {/* Column 3: Bunker grid */}
+      {/* Column 3: Bunker grid (editable) */}
       <div className="col-span-6">
-        <div className="border border-ve-border">
-          <div className="grid grid-cols-[28px_70px_70px_70px_60px_60px_60px_60px_60px] bg-ve-headerBg text-[11px] font-semibold text-ve-text">
-            <div className="border-r border-ve-border px-1 py-1 text-center">…</div>
-            <div className="border-r border-ve-border px-1 py-1">Name</div>
-            <div className="border-r border-ve-border px-1 py-1">Symbol</div>
-            <div className="border-r border-ve-border px-1 py-1">Basis</div>
-            <div className="border-r border-ve-border px-1 py-1 text-right">Price</div>
-            <div className="border-r border-ve-border px-1 py-1 text-right">S Bal</div>
-            <div className="border-r border-ve-border px-1 py-1 text-right">S Lad</div>
-            <div className="border-r border-ve-border px-1 py-1 text-right">P Ld</div>
-            <div className="px-1 py-1 text-right">P Dis</div>
-          </div>
-          {bunkerRows.map((r) => (
-            <div
-              key={r.name}
-              className="grid grid-cols-[28px_70px_70px_70px_60px_60px_60px_60px_60px] border-t border-ve-border text-[12px] hover:bg-ve-rowHover"
-            >
-              <div className="border-r border-ve-border px-1 py-[3px] text-center text-ve-label">⋯</div>
-              <div className="border-r border-ve-border px-1 py-[3px]">{r.name}</div>
-              <div className="border-r border-ve-border px-1 py-[3px]" />
-              <div className="border-r border-ve-border px-1 py-[3px]" />
-              <div className="border-r border-ve-border px-1 py-[3px] text-right">{r.price}</div>
-              <div className="border-r border-ve-border px-1 py-[3px] text-right">{r.sBal}</div>
-              <div className="border-r border-ve-border px-1 py-[3px] text-right">{r.sLad}</div>
-              <div className="border-r border-ve-border px-1 py-[3px] text-right">{r.pLd}</div>
-              <div className="px-1 py-[3px] text-right">{r.pDis}</div>
-            </div>
-          ))}
-          {/* Empty rows */}
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="grid grid-cols-[28px_70px_70px_70px_60px_60px_60px_60px_60px] border-t border-ve-border text-[12px]"
-            >
-              <div className="border-r border-ve-border px-1 py-[3px]">&nbsp;</div>
-              {Array.from({ length: 8 }).map((__, j) => (
-                <div key={j} className={`${j < 7 ? "border-r border-ve-border" : ""} px-1 py-[3px]`} />
-              ))}
-            </div>
-          ))}
-          <div className="border-t border-ve-border px-2 py-1 text-[12px]">
-            <label className="inline-flex items-center gap-1">
-              <input type="checkbox" className="h-3 w-3" /> Use Scrubber
-            </label>
-          </div>
+        <EditableTable
+          storageKey="bunkers"
+          title="Bunkers"
+          initialColumns={bunkerColumns}
+          initialRows={bunkerData}
+        />
+        <div className="mt-1 px-1 text-[12px]">
+          <label className="inline-flex items-center gap-1">
+            <input type="checkbox" className="h-3 w-3" /> Use Scrubber
+          </label>
         </div>
       </div>
     </div>
