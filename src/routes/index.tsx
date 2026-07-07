@@ -76,8 +76,17 @@ function Select({ value = "" }: { value?: string }) {
 }
 
 function Toolbar() {
+  const { mode, setMode } = useViewMode();
   return (
     <div className="flex items-center gap-1 border-b border-ve-border bg-ve-toolbar px-2 py-1 text-[12px]">
+      <button
+        onClick={() => setMode(mode === "edit" ? "final" : "edit")}
+        className={`ve-tool-btn flex items-center gap-1 rounded px-2 font-semibold ${mode === "final" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}
+        title="Chuyển chế độ chỉnh sửa / final"
+      >
+        {mode === "final" ? "Final (Read-only)" : "Editing (WYSIWYG)"}
+      </button>
+      <span className="mx-1 h-4 w-px bg-ve-border" />
       <button className="ve-tool-btn" aria-label="Add">
         <Plus className="h-4 w-4 text-ve-accent" />
       </button>
