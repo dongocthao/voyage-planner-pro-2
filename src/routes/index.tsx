@@ -12,6 +12,7 @@ import {
   Globe,
 } from "lucide-react";
 import EditableTable, { type Column, type Row } from "@/components/EditableTable";
+import { ViewModeProvider, useViewMode } from "@/lib/view-mode";
 
 export const Route = createFileRoute("/")({
   head: () => ({
