@@ -405,29 +405,31 @@ function PnLPanel() {
 
 function VoyageEstimator() {
   return (
-    <div className="min-h-screen bg-ve-app text-ve-text">
-      <div className="mx-auto flex min-h-screen max-w-[1600px] flex-col border-x border-ve-border bg-white">
-        {/* Title bar */}
-        <div className="flex items-center gap-2 border-b border-ve-border bg-white px-3 py-1.5 text-[12px]">
-          <div className="h-5 w-32 rounded-sm bg-ve-disabled" />
-          <span className="text-ve-label">/</span>
-          <div className="h-5 w-40 rounded-sm bg-ve-disabled" />
-          <div className="ml-auto">
-            <Globe className="h-4 w-4 text-ve-accent" />
+    <ViewModeProvider>
+      <div className="min-h-screen bg-ve-app text-ve-text">
+        <div className="mx-auto flex min-h-screen max-w-[1600px] flex-col border-x border-ve-border bg-white">
+          {/* Title bar */}
+          <div className="flex items-center gap-2 border-b border-ve-border bg-white px-3 py-1.5 text-[12px]">
+            <div className="h-5 w-32 rounded-sm bg-ve-disabled" />
+            <span className="text-ve-label">/</span>
+            <div className="h-5 w-40 rounded-sm bg-ve-disabled" />
+            <div className="ml-auto">
+              <Globe className="h-4 w-4 text-ve-accent" />
+            </div>
           </div>
-        </div>
 
-        <Toolbar />
+          <Toolbar />
 
-        <div className="flex flex-1">
-          <div className="flex-1 overflow-auto">
-            <HeaderSection />
-            <CargoesSection />
-            <ItinerarySection />
+          <div className="flex flex-1">
+            <div className="flex-1 overflow-auto">
+              <HeaderSection />
+              <CargoesSection />
+              <ItinerarySection />
+            </div>
+            <PnLPanel />
           </div>
-          <PnLPanel />
         </div>
       </div>
-    </div>
+    </ViewModeProvider>
   );
 }
