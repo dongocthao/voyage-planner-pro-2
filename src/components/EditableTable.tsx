@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { ChevronDown, Plus, Trash2, SplitSquareHorizontal, ArrowLeftRight } from "lucide-react";
+import { useViewMode } from "@/lib/view-mode";
 
 export type Column = {
   id: string;
