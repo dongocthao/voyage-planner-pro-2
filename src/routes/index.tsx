@@ -12,6 +12,7 @@ import {
   Globe,
 } from "lucide-react";
 import EditableTable, { type Column, type Row } from "@/components/EditableTable";
+import { ViewModeProvider, useViewMode } from "@/lib/view-mode";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -75,8 +76,17 @@ function Select({ value = "" }: { value?: string }) {
 }
 
 function Toolbar() {
+  const { mode, setMode } = useViewMode();
   return (
     <div className="flex items-center gap-1 border-b border-ve-border bg-ve-toolbar px-2 py-1 text-[12px]">
+      <button
+        onClick={() => setMode(mode === "edit" ? "final" : "edit")}
+        className={`ve-tool-btn flex items-center gap-1 rounded px-2 font-semibold ${mode === "final" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}
+        title="Chuyển chế độ chỉnh sửa / final"
+      >
+        {mode === "final" ? "Final (Read-only)" : "Editing (WYSIWYG)"}
+      </button>
+      <span className="mx-1 h-4 w-px bg-ve-border" />
       <button className="ve-tool-btn" aria-label="Add">
         <Plus className="h-4 w-4 text-ve-accent" />
       </button>
@@ -395,29 +405,31 @@ function PnLPanel() {
 
 function VoyageEstimator() {
   return (
-    <div className="min-h-screen bg-ve-app text-ve-text">
-      <div className="mx-auto flex min-h-screen max-w-[1600px] flex-col border-x border-ve-border bg-white">
-        {/* Title bar */}
-        <div className="flex items-center gap-2 border-b border-ve-border bg-white px-3 py-1.5 text-[12px]">
-          <div className="h-5 w-32 rounded-sm bg-ve-disabled" />
-          <span className="text-ve-label">/</span>
-          <div className="h-5 w-40 rounded-sm bg-ve-disabled" />
-          <div className="ml-auto">
-            <Globe className="h-4 w-4 text-ve-accent" />
+    <ViewModeProvider>
+      <div className="min-h-screen bg-ve-app text-ve-text">
+        <div className="mx-auto flex min-h-screen max-w-[1600px] flex-col border-x border-ve-border bg-white">
+          {/* Title bar */}
+          <div className="flex items-center gap-2 border-b border-ve-border bg-white px-3 py-1.5 text-[12px]">
+            <div className="h-5 w-32 rounded-sm bg-ve-disabled" />
+            <span className="text-ve-label">/</span>
+            <div className="h-5 w-40 rounded-sm bg-ve-disabled" />
+            <div className="ml-auto">
+              <Globe className="h-4 w-4 text-ve-accent" />
+            </div>
           </div>
-        </div>
 
-        <Toolbar />
+          <Toolbar />
 
-        <div className="flex flex-1">
-          <div className="flex-1 overflow-auto">
-            <HeaderSection />
-            <CargoesSection />
-            <ItinerarySection />
+          <div className="flex flex-1">
+            <div className="flex-1 overflow-auto">
+              <HeaderSection />
+              <CargoesSection />
+              <ItinerarySection />
+            </div>
+            <PnLPanel />
           </div>
-          <PnLPanel />
         </div>
       </div>
-    </div>
+    </ViewModeProvider>
   );
 }
