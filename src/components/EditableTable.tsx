@@ -140,22 +140,24 @@ export default function EditableTable({
     setRows(initialRows);
   };
 
-  const totalWidth = columns.reduce((s, c) => s + c.width, 0) + 32; // + row handle
+  const totalWidth = columns.reduce((s, c) => s + c.width, 0) + (isFinal ? 0 : 32); // + row handle
 
   return (
     <div className="border border-ve-border bg-white">
       {title && (
         <div className="flex items-center justify-between border-b border-ve-border bg-ve-sectionBg px-3 py-1">
           <span className="text-[13px] font-semibold text-ve-text">{title}</span>
-          <div className="flex items-center gap-2 text-[11px]">
-            <button onClick={() => addColumn()} className="flex items-center gap-1 rounded border border-ve-border bg-white px-2 py-0.5 hover:bg-ve-rowHover">
-              <Plus className="h-3 w-3" /> Thêm cột
-            </button>
-            <button onClick={addRow} className="flex items-center gap-1 rounded border border-ve-border bg-white px-2 py-0.5 hover:bg-ve-rowHover">
-              <Plus className="h-3 w-3" /> Thêm dòng
-            </button>
-            <button onClick={resetTable} className="text-ve-label hover:text-ve-text">Reset</button>
-          </div>
+          {!isFinal && (
+            <div className="flex items-center gap-2 text-[11px]">
+              <button onClick={() => addColumn()} className="flex items-center gap-1 rounded border border-ve-border bg-white px-2 py-0.5 hover:bg-ve-rowHover">
+                <Plus className="h-3 w-3" /> Thêm cột
+              </button>
+              <button onClick={addRow} className="flex items-center gap-1 rounded border border-ve-border bg-white px-2 py-0.5 hover:bg-ve-rowHover">
+                <Plus className="h-3 w-3" /> Thêm dòng
+              </button>
+              <button onClick={resetTable} className="text-ve-label hover:text-ve-text">Reset</button>
+            </div>
+          )}
         </div>
       )}
 
@@ -163,7 +165,9 @@ export default function EditableTable({
         <div style={{ width: totalWidth }}>
           {/* Header */}
           <div className="flex bg-ve-headerBg text-[11px] font-semibold text-ve-text">
-            <div className="w-8 shrink-0 border-r border-ve-border px-1 py-1 text-center">#</div>
+            {!isFinal && (
+              <div className="w-8 shrink-0 border-r border-ve-border px-1 py-1 text-center">#</div>
+            )}
             {columns.map((col, idx) => (
               <div
                 key={col.id}
@@ -171,7 +175,7 @@ export default function EditableTable({
                 className="relative shrink-0 border-r border-ve-border px-1.5 py-1"
               >
                 <div className="flex items-center justify-between gap-1">
-                  {editingHeader === col.id ? (
+                  {editingHeader === col.id && !isFinal ? (
                     <input
                       autoFocus
                       defaultValue={col.label}
@@ -184,23 +188,25 @@ export default function EditableTable({
                     />
                   ) : (
                     <span
-                      onDoubleClick={() => setEditingHeader(col.id)}
-                      className="min-w-0 flex-1 cursor-text truncate"
-                      title="Double-click để đổi tên"
+                      onDoubleClick={() => !isFinal && setEditingHeader(col.id)}
+                      className={`min-w-0 flex-1 truncate ${isFinal ? "" : "cursor-text"}`}
+                      title={isFinal ? undefined : "Double-click để đổi tên"}
                     >
                       {col.label}
                     </span>
                   )}
-                  <button
-                    onClick={() => setMenuFor(menuFor === col.id ? null : col.id)}
-                    className="shrink-0 rounded p-0.5 text-ve-label hover:bg-white hover:text-ve-text"
-                    aria-label="Column menu"
-                  >
-                    <ChevronDown className="h-3 w-3" />
-                  </button>
+                  {!isFinal && (
+                    <button
+                      onClick={() => setMenuFor(menuFor === col.id ? null : col.id)}
+                      className="shrink-0 rounded p-0.5 text-ve-label hover:bg-white hover:text-ve-text"
+                      aria-label="Column menu"
+                    >
+                      <ChevronDown className="h-3 w-3" />
+                    </button>
+                  )}
                 </div>
 
-                {menuFor === col.id && (
+                {!isFinal && menuFor === col.id && (
                   <div
                     className="absolute left-0 top-full z-20 mt-0.5 w-44 rounded border border-ve-border bg-white py-1 text-[12px] shadow-lg"
                     onMouseLeave={() => setMenuFor(null)}
@@ -226,10 +232,12 @@ export default function EditableTable({
                 )}
 
                 {/* Resize handle */}
-                <div
-                  onMouseDown={(e) => startResize(e, col)}
-                  className="absolute right-0 top-0 z-10 h-full w-1.5 cursor-col-resize hover:bg-ve-accent/60"
-                />
+                {!isFinal && (
+                  <div
+                    onMouseDown={(e) => startResize(e, col)}
+                    className="absolute right-0 top-0 z-10 h-full w-1.5 cursor-col-resize hover:bg-ve-accent/60"
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -237,37 +245,49 @@ export default function EditableTable({
           {/* Body */}
           {rows.map((row) => (
             <div key={row.__id} className="group flex border-t border-ve-border text-[12px] hover:bg-ve-rowHover">
-              <div className="flex w-8 shrink-0 items-center justify-center border-r border-ve-border text-ve-label">
-                <button
-                  onClick={() => deleteRow(row.__id)}
-                  className="opacity-0 group-hover:opacity-100"
-                  title="Xóa dòng"
-                >
-                  <Trash2 className="h-3 w-3 text-red-500" />
-                </button>
-              </div>
+              {!isFinal && (
+                <div className="flex w-8 shrink-0 items-center justify-center border-r border-ve-border text-ve-label">
+                  <button
+                    onClick={() => deleteRow(row.__id)}
+                    className="opacity-0 group-hover:opacity-100"
+                    title="Xóa dòng"
+                  >
+                    <Trash2 className="h-3 w-3 text-red-500" />
+                  </button>
+                </div>
+              )}
               {columns.map((col) => (
                 <div
                   key={col.id}
                   style={{ width: col.width }}
                   className="shrink-0 border-r border-ve-border"
                 >
-                  <input
-                    value={row[col.id] ?? ""}
-                    onChange={(e) => updateCell(row.__id, col.id, e.target.value)}
-                    className={`h-[24px] w-full border-0 bg-transparent px-1.5 text-[12px] outline-none focus:bg-white focus:ring-1 focus:ring-ve-accent ${col.align === "right" ? "text-right" : ""}`}
-                  />
+                  {isFinal ? (
+                    <div
+                      className={`h-[24px] w-full truncate px-1.5 py-[3px] text-[12px] tabular-nums ${col.align === "right" ? "text-right" : ""}`}
+                    >
+                      {row[col.id] ?? ""}
+                    </div>
+                  ) : (
+                    <input
+                      value={row[col.id] ?? ""}
+                      onChange={(e) => updateCell(row.__id, col.id, e.target.value)}
+                      className={`h-[24px] w-full border-0 bg-transparent px-1.5 text-[12px] outline-none focus:bg-white focus:ring-1 focus:ring-ve-accent ${col.align === "right" ? "text-right" : ""}`}
+                    />
+                  )}
                 </div>
               ))}
             </div>
           ))}
 
           {/* Add row */}
-          <div className="border-t border-ve-border py-1 text-center">
-            <button onClick={addRow} className="text-[12px] text-ve-accent hover:underline">
-              + Thêm dòng
-            </button>
-          </div>
+          {!isFinal && (
+            <div className="border-t border-ve-border py-1 text-center">
+              <button onClick={addRow} className="text-[12px] text-ve-accent hover:underline">
+                + Thêm dòng
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
