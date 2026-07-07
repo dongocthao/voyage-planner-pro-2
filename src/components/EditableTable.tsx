@@ -27,8 +27,9 @@ export default function EditableTable({
   initialColumns,
   initialRows,
   title,
-  minColWidth = 40,
 }: Props) {
+  const { mode } = useViewMode();
+  const isFinal = mode === "final";
   const [columns, setColumns] = useState<Column[]>(() => {
     if (typeof window === "undefined") return initialColumns;
     try {
