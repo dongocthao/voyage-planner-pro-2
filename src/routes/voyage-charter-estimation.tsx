@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronDown, Plus, Search, Save, Trash2, FileText, Lock, RefreshCw, AlertTriangle, Globe } from "lucide-react";
 import { useState } from "react";
 import EditableTable, { type Column, type Row } from "@/components/EditableTable";
-import { ViewModeProvider, useViewMode } from "@/lib/view-mode";
 
 export const Route = createFileRoute("/voyage-charter-estimation")({
   head: () => ({
@@ -14,7 +13,7 @@ export const Route = createFileRoute("/voyage-charter-estimation")({
   component: VoyageCharterEstimation,
 });
 
-/* ---------- Reusable bits (mirroring Voyage Estimator style) ---------- */
+/* ---------- Reusable bits ---------- */
 
 function Field({
   label,
@@ -26,7 +25,7 @@ function Field({
   labelWidth?: string;
 }) {
   return (
-    <div className="flex items-center gap-2 py-[3px]">
+    <div className="flex items-center gap-2 py-[1px]">
       <label className={`${labelWidth} shrink-0 text-right text-[12px] text-ve-label`}>{label}</label>
       <div className="flex-1">{children}</div>
     </div>
@@ -66,16 +65,8 @@ function Select({ value = "" }: { value?: string }) {
 }
 
 function Toolbar() {
-  const { mode, setMode } = useViewMode();
   return (
     <div className="flex items-center gap-1 border-b border-ve-border bg-ve-toolbar px-2 py-1 text-[12px]">
-      <button
-        onClick={() => setMode(mode === "edit" ? "final" : "edit")}
-        className={`ve-tool-btn flex items-center gap-1 rounded px-2 font-semibold ${mode === "final" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}
-      >
-        {mode === "final" ? "Final (Read-only)" : "Editing (WYSIWYG)"}
-      </button>
-      <span className="mx-1 h-4 w-px bg-ve-border" />
       <button className="ve-tool-btn" aria-label="Add"><Plus className="h-4 w-4 text-ve-accent" /></button>
       <button className="ve-tool-btn" aria-label="Search"><Search className="h-4 w-4 text-ve-accent" /></button>
       <span className="mx-1 h-4 w-px bg-ve-border" />
@@ -104,21 +95,23 @@ function Toolbar() {
   );
 }
 
-/* ---------- Section: Header form + Fuel tabs ---------- */
+/* ---------- Header section: Fuel tabs ---------- */
 
 const fuelCols: Column[] = [
-  { id: "fuel", label: "Nhiên liệu", width: 90 },
-  { id: "load", label: "Chở hàng", width: 80, align: "right" },
-  { id: "ballast", label: "Chạy rỗng", width: 80, align: "right" },
-  { id: "run", label: "Chạy luồng", width: 80, align: "right" },
-  { id: "load2", label: "Xếp hàng", width: 80, align: "right" },
-  { id: "dis", label: "Dỡ hàng", width: 80, align: "right" },
-  { id: "idle", label: "Nghỉ", width: 60, align: "right" },
-  { id: "other", label: "Bù khác", width: 70, align: "right" },
+  { id: "fuel", label: "Nhiên liệu", width: 80 },
+  { id: "load", label: "Chở hàng", width: 70, align: "right" },
+  { id: "ballast", label: "Chạy rỗng", width: 70, align: "right" },
+  { id: "run", label: "Chạy luồng", width: 70, align: "right" },
+  { id: "load2", label: "Xếp hàng", width: 70, align: "right" },
+  { id: "dis", label: "Dỡ hàng", width: 70, align: "right" },
+  { id: "idle", label: "Nghỉ", width: 55, align: "right" },
+  { id: "other", label: "Bù khác", width: 65, align: "right" },
 ];
 const fuelData: Row[] = [
   { __id: "f1", fuel: "FO", load: "12.00", ballast: "11.00", run: "5.00", load2: "3.00", dis: "3.00", idle: "1.00", other: "0.00" },
   { __id: "f2", fuel: "DO", load: "0.50", ballast: "0.50", run: "1.50", load2: "0.80", dis: "0.80", idle: "0.30", other: "0.00" },
+  { __id: "f3", fuel: "", load: "", ballast: "", run: "", load2: "", dis: "", idle: "", other: "" },
+  { __id: "f4", fuel: "", load: "", ballast: "", run: "", load2: "", dis: "", idle: "", other: "" },
 ];
 
 function HeaderSection() {
@@ -127,7 +120,7 @@ function HeaderSection() {
   return (
     <div className="grid grid-cols-12 gap-3 border-b border-ve-border bg-white px-3 py-2">
       {/* Column 1 */}
-      <div className="col-span-4">
+      <div className="col-span-3">
         <Field label="Mã dự tính"><Input /></Field>
         <Field label="Mã đơn hàng"><Input /></Field>
         <Field label="Tên tàu"><Select /></Field>
@@ -162,7 +155,7 @@ function HeaderSection() {
       </div>
 
       {/* Column 3: Tabs + speed + fuel table */}
-      <div className="col-span-4">
+      <div className="col-span-5">
         <div className="flex border-b border-ve-border text-[12px]">
           {tabs.map((t, i) => (
             <button
@@ -174,22 +167,19 @@ function HeaderSection() {
             </button>
           ))}
         </div>
-        <div className="mt-2 grid grid-cols-[110px_90px_1fr] items-start gap-2">
-          <div className="text-[12px] text-ve-label">Tốc độ (hải lý/giờ)</div>
-          <div />
-          <div />
-          <div className="text-[12px] text-ve-label">Chở hàng</div>
-          <Input value="11.50" align="right" />
-          <div />
-          <div className="text-[12px] text-ve-label">Chạy rỗng</div>
-          <Input value="12.00" align="right" />
-          <div />
+        <div className="mt-1 flex items-center gap-2">
+          <div className="w-24 shrink-0 text-[12px] text-ve-label">Tốc độ (hl/h)</div>
+          <label className="text-[12px] text-ve-label">Chở hàng</label>
+          <div className="w-20"><Input value="11.50" align="right" /></div>
+          <label className="text-[12px] text-ve-label">Chạy rỗng</label>
+          <div className="w-20"><Input value="12.00" align="right" /></div>
         </div>
-        <div className="mt-2">
+        <div className="mt-1">
           <EditableTable
             storageKey="vce:fuel"
             initialColumns={fuelCols}
             initialRows={fuelData}
+            minVisibleRows={4}
           />
         </div>
       </div>
@@ -215,11 +205,13 @@ const cargoCols: Column[] = [
   { id: "mg", label: "% MG", width: 60, align: "right" },
   { id: "tax", label: "Thuế cước", width: 80, align: "right" },
   { id: "liner", label: "Phí Liner", width: 80, align: "right" },
-  { id: "chtr", label: "Bên thuê tàu", width: 140 },
+  { id: "chtr", label: "Bên thuê tàu", width: 150 },
 ];
-const cargoData: Row[] = [
-  { __id: "c1", code: "", name: "", group: "", qty: "", unit: "", tol: "", tolType: "", frtType: "", frtRate: "", lump: "", term: "", hh: "", mg: "", tax: "", liner: "", chtr: "" },
-];
+const cargoData: Row[] = Array.from({ length: 5 }).map((_, i) => {
+  const r: Row = { __id: `c${i + 1}` };
+  cargoCols.forEach((c) => (r[c.id] = ""));
+  return r;
+});
 
 /* ---------- Itinerary ---------- */
 
@@ -241,9 +233,11 @@ const itiCols: Column[] = [
   { id: "arr", label: "Ngày đến", width: 110 },
   { id: "dep", label: "Ngày rời", width: 110 },
 ];
-const itiData: Row[] = [
-  { __id: "i1", op: "", port: "", dist: "", eca: "", draft: "", type: "", spd: "", cday: "", rate: "", berth: "", wait: "", dem: "", des: "", pf: "", arr: "", dep: "" },
-];
+const itiData: Row[] = Array.from({ length: 10 }).map((_, i) => {
+  const r: Row = { __id: `i${i + 1}` };
+  itiCols.forEach((c) => (r[c.id] = ""));
+  return r;
+});
 
 /* ---------- Chi phí + Nhiên liệu + P&L ---------- */
 
@@ -291,31 +285,34 @@ const pnlItems: [string, string][] = [
 ];
 
 const costFuelCols: Column[] = [
-  { id: "fuel", label: "Nhiên liệu", width: 110 },
+  { id: "fuel", label: "Nhiên liệu", width: 100 },
   { id: "price", label: "Đơn giá / MT", width: 110, align: "right" },
-  { id: "qty", label: "Lượng (MT)", width: 110, align: "right" },
-  { id: "amt", label: "Thành tiền", width: 140, align: "right" },
+  { id: "qty", label: "Lượng (MT)", width: 100, align: "right" },
+  { id: "amt", label: "Thành tiền", width: 130, align: "right" },
 ];
 const costFuelData: Row[] = [
   { __id: "cf1", fuel: "FO", price: "", qty: "", amt: "" },
   { __id: "cf2", fuel: "DO", price: "", qty: "", amt: "" },
+  { __id: "cf3", fuel: "", price: "", qty: "", amt: "" },
+  { __id: "cf4", fuel: "", price: "", qty: "", amt: "" },
 ];
 
 function CostSection() {
   return (
     <div className="grid grid-cols-12 gap-4 border-t border-ve-border bg-white px-3 py-3">
       <div className="col-span-3">
-        <div className="mb-2 text-[12px] font-semibold uppercase tracking-wider text-ve-text">Chi phí khai thác</div>
+        <div className="mb-1 text-[12px] font-semibold uppercase tracking-wider text-ve-text">Chi phí khai thác</div>
         <CostFieldColumn items={costCol1} />
       </div>
-      <div className="col-span-3 pt-6">
+      <div className="col-span-2 pt-5">
         <CostFieldColumn items={costCol2} />
       </div>
-      <div className="col-span-3 pt-1">
+      <div className="col-span-4 pt-1">
         <EditableTable
           storageKey="vce:costFuel"
           initialColumns={costFuelCols}
           initialRows={costFuelData}
+          minVisibleRows={4}
         />
       </div>
       <div className="col-span-3">
@@ -329,40 +326,40 @@ function CostSection() {
 
 function VoyageCharterEstimation() {
   return (
-    <ViewModeProvider>
-      <div className="min-h-screen bg-ve-app text-ve-text">
-        <div className="mx-auto flex min-h-screen max-w-[1600px] flex-col border-x border-ve-border bg-white">
-          <div className="flex items-center gap-2 border-b border-ve-border bg-white px-3 py-1.5 text-[13px] font-semibold">
-            <span>Voyage Charter Estimation</span>
+    <div className="min-h-screen bg-ve-app text-ve-text">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1900px] flex-col border-x border-ve-border bg-white">
+        <div className="flex items-center gap-2 border-b border-ve-border bg-white px-3 py-1.5 text-[13px] font-semibold">
+          <span>Voyage Charter Estimation</span>
+        </div>
+
+        <Toolbar />
+
+        <div className="flex-1 overflow-auto">
+          <HeaderSection />
+
+          <div className="border-b border-ve-border bg-white p-3">
+            <EditableTable
+              storageKey="vce:cargoes"
+              title="Danh sách hàng hoá"
+              initialColumns={cargoCols}
+              initialRows={cargoData}
+              minVisibleRows={5}
+            />
           </div>
 
-          <Toolbar />
-
-          <div className="flex-1 overflow-auto">
-            <HeaderSection />
-
-            <div className="border-b border-ve-border bg-white p-3">
-              <EditableTable
-                storageKey="vce:cargoes"
-                title="Danh sách hàng hoá"
-                initialColumns={cargoCols}
-                initialRows={cargoData}
-              />
-            </div>
-
-            <div className="border-b border-ve-border bg-white p-3">
-              <EditableTable
-                storageKey="vce:itinerary"
-                title="Lịch trình chuyến"
-                initialColumns={itiCols}
-                initialRows={itiData}
-              />
-            </div>
-
-            <CostSection />
+          <div className="border-b border-ve-border bg-white p-3">
+            <EditableTable
+              storageKey="vce:itinerary"
+              title="Lịch trình chuyến"
+              initialColumns={itiCols}
+              initialRows={itiData}
+              minVisibleRows={10}
+            />
           </div>
+
+          <CostSection />
         </div>
       </div>
-    </ViewModeProvider>
+    </div>
   );
 }
