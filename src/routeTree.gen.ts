@@ -9,8 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VoyageCharterEstimationRouteImport } from './routes/voyage-charter-estimation'
 import { Route as IndexRouteImport } from './routes/index'
 
+const VoyageCharterEstimationRoute = VoyageCharterEstimationRouteImport.update({
+  id: '/voyage-charter-estimation',
+  path: '/voyage-charter-estimation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +25,39 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/voyage-charter-estimation': typeof VoyageCharterEstimationRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/voyage-charter-estimation': typeof VoyageCharterEstimationRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/voyage-charter-estimation': typeof VoyageCharterEstimationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/voyage-charter-estimation'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/voyage-charter-estimation'
+  id: '__root__' | '/' | '/voyage-charter-estimation'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  VoyageCharterEstimationRoute: typeof VoyageCharterEstimationRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/voyage-charter-estimation': {
+      id: '/voyage-charter-estimation'
+      path: '/voyage-charter-estimation'
+      fullPath: '/voyage-charter-estimation'
+      preLoaderRoute: typeof VoyageCharterEstimationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +70,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  VoyageCharterEstimationRoute: VoyageCharterEstimationRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
