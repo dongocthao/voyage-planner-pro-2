@@ -1,13 +1,32 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronDown, Plus, Search, Save, Trash2, FileText, Lock, RefreshCw, AlertTriangle, Globe } from "lucide-react";
-import { useState } from "react";
-import EditableTable, { type Column, type Row } from "@/components/EditableTable";
+import {
+  ChevronDown,
+  FilePlus,
+  Pencil,
+  RefreshCw,
+  Trash2,
+  Search,
+  Printer,
+  Download,
+  FileText,
+  Ruler,
+  Anchor,
+  Fuel,
+  LineChart,
+  LogOut,
+} from "lucide-react";
+import { useMemo, useState } from "react";
+import EditableTable, { type Column, type Row, type FooterRow } from "@/components/EditableTable";
 
 export const Route = createFileRoute("/voyage-charter-estimation")({
   head: () => ({
     meta: [
       { title: "Voyage Charter Estimation" },
-      { name: "description", content: "Voyage Charter Estimation — dự tính chuyến, cargoes, itinerary, chi phí và P&L." },
+      {
+        name: "description",
+        content:
+          "Voyage Charter Estimation — dự tính chuyến, cargoes, itinerary, chi phí và P&L.",
+      },
     ],
   }),
   component: VoyageCharterEstimation,
@@ -26,7 +45,9 @@ function Field({
 }) {
   return (
     <div className="flex items-center gap-2 py-[1px]">
-      <label className={`${labelWidth} shrink-0 text-right text-[12px] text-ve-label`}>{label}</label>
+      <label className={`${labelWidth} shrink-0 text-right text-[12px] text-ve-label`}>
+        {label}
+      </label>
       <div className="flex-1">{children}</div>
     </div>
   );
@@ -64,41 +85,50 @@ function Select({ value = "" }: { value?: string }) {
   );
 }
 
+/* ---------- Toolbar ---------- */
+
+type TB = { label: string; Icon: React.ComponentType<{ className?: string }>; color: string };
+const TOOLBAR_BTNS: TB[] = [
+  { label: "Thêm mới", Icon: FilePlus, color: "text-emerald-600" },
+  { label: "Chỉnh sửa", Icon: Pencil, color: "text-blue-600" },
+  { label: "Cập nhật", Icon: RefreshCw, color: "text-sky-600" },
+  { label: "Xoá bỏ", Icon: Trash2, color: "text-red-600" },
+  { label: "Tìm kiếm", Icon: Search, color: "text-indigo-600" },
+  { label: "In ấn", Icon: Printer, color: "text-slate-600" },
+  { label: "Xuất dữ liệu", Icon: Download, color: "text-emerald-700" },
+  { label: "Báo cáo", Icon: FileText, color: "text-violet-600" },
+  { label: "Tìm cự ly", Icon: Ruler, color: "text-amber-600" },
+  { label: "Tra cứu cảng phí", Icon: Anchor, color: "text-teal-600" },
+  { label: "Tính toán nhiên liệu", Icon: Fuel, color: "text-orange-600" },
+  { label: "Phân tích độ nhạy", Icon: LineChart, color: "text-fuchsia-600" },
+  { label: "Thoát", Icon: LogOut, color: "text-rose-600" },
+];
+
 function Toolbar() {
   return (
-    <div className="flex items-center gap-1 border-b border-ve-border bg-ve-toolbar px-2 py-1 text-[12px]">
-      <button className="ve-tool-btn" aria-label="Add"><Plus className="h-4 w-4 text-ve-accent" /></button>
-      <button className="ve-tool-btn" aria-label="Search"><Search className="h-4 w-4 text-ve-accent" /></button>
-      <span className="mx-1 h-4 w-px bg-ve-border" />
-      <button className="ve-tool-btn flex items-center gap-1 px-2 font-semibold text-ve-text">
-        <Save className="h-4 w-4 text-ve-accent" /> Lưu
-      </button>
-      <button className="ve-tool-btn" aria-label="Delete"><Trash2 className="h-4 w-4 text-ve-label" /></button>
-      <button className="ve-tool-btn flex items-center gap-1 px-2">Menu <ChevronDown className="h-3 w-3" /></button>
-      <span className="mx-1 h-4 w-px bg-ve-border" />
-      <button className="ve-tool-btn px-2 text-ve-accent hover:underline">Thêm hàng</button>
-      <button className="ve-tool-btn px-2 text-ve-accent hover:underline">Lịch trình</button>
-      <span className="mx-1 h-4 w-px bg-ve-border" />
-      <button className="ve-tool-btn flex items-center gap-1 px-2">
-        <FileText className="h-4 w-4 text-ve-label" /> Báo cáo <ChevronDown className="h-3 w-3" />
-      </button>
-      <button className="ve-tool-btn"><Lock className="h-4 w-4 text-emerald-600" /></button>
-      <button className="ve-tool-btn flex items-center gap-1 px-2">
-        <RefreshCw className="h-4 w-4 text-ve-accent" /> Cập nhật giá
-      </button>
-      <AlertTriangle className="ml-1 h-4 w-4 text-amber-500" />
-      <div className="ml-auto flex items-center gap-2 pr-1">
-        <Link to="/" className="text-ve-accent hover:underline">← Voyage Estimator</Link>
-        <Globe className="h-4 w-4 text-ve-accent" />
-      </div>
+    <div className="flex flex-wrap items-center gap-1 border-b border-ve-border bg-ve-toolbar px-2 py-1 text-[12px]">
+      {TOOLBAR_BTNS.map((b, i) => (
+        <button
+          key={b.label}
+          type="button"
+          className="ve-tool-btn flex items-center gap-1 px-2 hover:bg-ve-rowHover"
+          style={i === TOOLBAR_BTNS.length - 1 ? { marginLeft: "auto" } : undefined}
+        >
+          <b.Icon className={`h-4 w-4 ${b.color}`} />
+          <span className="text-ve-text">{b.label}</span>
+        </button>
+      ))}
+      <Link to="/" className="ml-2 text-ve-accent hover:underline">
+        ← Voyage Estimator
+      </Link>
     </div>
   );
 }
 
-/* ---------- Header section: Fuel tabs ---------- */
+/* ---------- Fuel data (VLSFO / LSMGO / HSF / MDO) ---------- */
 
 const fuelCols: Column[] = [
-  { id: "fuel", label: "Nhiên liệu", width: 80 },
+  { id: "fuel", label: "Nhiên liệu", width: 90 },
   { id: "load", label: "Chở hàng", width: 70, align: "right" },
   { id: "ballast", label: "Chạy rỗng", width: 70, align: "right" },
   { id: "run", label: "Chạy luồng", width: 70, align: "right" },
@@ -107,19 +137,20 @@ const fuelCols: Column[] = [
   { id: "idle", label: "Nghỉ", width: 55, align: "right" },
   { id: "other", label: "Bù khác", width: 65, align: "right" },
 ];
-const fuelData: Row[] = [
-  { __id: "f1", fuel: "FO", load: "12.00", ballast: "11.00", run: "5.00", load2: "3.00", dis: "3.00", idle: "1.00", other: "0.00" },
-  { __id: "f2", fuel: "DO", load: "0.50", ballast: "0.50", run: "1.50", load2: "0.80", dis: "0.80", idle: "0.30", other: "0.00" },
-  { __id: "f3", fuel: "", load: "", ballast: "", run: "", load2: "", dis: "", idle: "", other: "" },
-  { __id: "f4", fuel: "", load: "", ballast: "", run: "", load2: "", dis: "", idle: "", other: "" },
-];
+const FUEL_NAMES = ["VLSFO", "LSMGO", "HSF", "MDO"];
+const fuelData: Row[] = FUEL_NAMES.map((n, i) => {
+  const r: Row = { __id: `f${i + 1}`, fuel: n };
+  fuelCols.slice(1).forEach((c) => (r[c.id] = ""));
+  return r;
+});
+
+/* ---------- Header section ---------- */
 
 function HeaderSection() {
   const [tab, setTab] = useState(0);
   const tabs = ["Toàn tải", "Kinh tế", "Tuỳ chỉnh"];
   return (
     <div className="grid grid-cols-12 gap-3 border-b border-ve-border bg-white px-3 py-2">
-      {/* Column 1 */}
       <div className="col-span-3">
         <Field label="Mã dự tính"><Input /></Field>
         <Field label="Mã đơn hàng"><Input /></Field>
@@ -135,7 +166,6 @@ function HeaderSection() {
         <Field label="Nhân viên khai thác"><Select /></Field>
       </div>
 
-      {/* Column 2 */}
       <div className="col-span-4">
         <Field label="Cảng chạy rỗng"><Select /></Field>
         <Field label="Cảng điều động"><Select /></Field>
@@ -143,18 +173,13 @@ function HeaderSection() {
         <Field label="Kết thúc chuyến"><Select value="27/01/22 12:17" /></Field>
         <Field label="Vùng hoạt động"><Input /></Field>
         <Field label="Rủi ro cướp biển">
-          <div className="flex gap-1">
-            <Input /><Input />
-          </div>
+          <div className="flex gap-1"><Input /><Input /></div>
         </Field>
         <Field label="Tuyến ECA">
-          <div className="flex gap-1">
-            <Input /><Input />
-          </div>
+          <div className="flex gap-1"><Input /><Input /></div>
         </Field>
       </div>
 
-      {/* Column 3: Tabs + speed + fuel table */}
       <div className="col-span-5">
         <div className="flex border-b border-ve-border text-[12px]">
           {tabs.map((t, i) => (
@@ -180,6 +205,7 @@ function HeaderSection() {
             initialColumns={fuelCols}
             initialRows={fuelData}
             minVisibleRows={4}
+            hideActions
           />
         </div>
       </div>
@@ -191,7 +217,7 @@ function HeaderSection() {
 
 const cargoCols: Column[] = [
   { id: "code", label: "Mã hàng", width: 80 },
-  { id: "name", label: "Tên hàng", width: 160 },
+  { id: "name", label: "Tên hàng", width: 192 },
   { id: "group", label: "Phân nhóm", width: 110 },
   { id: "qty", label: "Khối lượng", width: 90, align: "right" },
   { id: "unit", label: "Đơn vị tính", width: 80 },
@@ -200,12 +226,13 @@ const cargoCols: Column[] = [
   { id: "frtType", label: "Loại cước", width: 90 },
   { id: "frtRate", label: "Giá cước", width: 90, align: "right" },
   { id: "lump", label: "Cước khoán", width: 100, align: "right" },
+  { id: "freight", label: "Tiền cước", width: 100, align: "right" },
   { id: "term", label: "ĐK Cước", width: 80 },
   { id: "hh", label: "% HH", width: 60, align: "right" },
   { id: "mg", label: "% MG", width: 60, align: "right" },
   { id: "tax", label: "Thuế cước", width: 80, align: "right" },
   { id: "liner", label: "Phí Liner", width: 80, align: "right" },
-  { id: "chtr", label: "Bên thuê tàu", width: 150 },
+  { id: "chtr", label: "Bên thuê tàu", width: 225 },
 ];
 const cargoData: Row[] = Array.from({ length: 5 }).map((_, i) => {
   const r: Row = { __id: `c${i + 1}` };
@@ -217,21 +244,22 @@ const cargoData: Row[] = Array.from({ length: 5 }).map((_, i) => {
 
 const itiCols: Column[] = [
   { id: "op", label: "Tác nghiệp", width: 110 },
-  { id: "port", label: "Cảng / Vị trí", width: 160 },
+  { id: "port", label: "Cảng / Vị trí", width: 240 },
+  { id: "tz", label: "Múi giờ", width: 70, align: "right" },
   { id: "dist", label: "Cự ly", width: 70, align: "right" },
   { id: "eca", label: "ECA", width: 60, align: "right" },
-  { id: "draft", label: "Độ trừ", width: 70, align: "right" },
+  { id: "draft", label: "Độ trượt", width: 70, align: "right" },
   { id: "type", label: "Kiểu", width: 60 },
-  { id: "spd", label: "Tốc độ", width: 70, align: "right" },
+  { id: "spd", label: "Ngày chạy", width: 80, align: "right" },
   { id: "cday", label: "Ngày c...", width: 90 },
   { id: "rate", label: "Mức xếp dỡ", width: 100, align: "right" },
-  { id: "berth", label: "Ngày đỗ", width: 90 },
-  { id: "wait", label: "Ngày chờ", width: 90 },
+  { id: "berth", label: "Ngày đỗ", width: 90, align: "right" },
+  { id: "wait", label: "Ngày chờ", width: 90, align: "right" },
   { id: "dem", label: "Mức phạt", width: 90, align: "right" },
   { id: "des", label: "Mức thưởng", width: 90, align: "right" },
   { id: "pf", label: "Cảng phí", width: 90, align: "right" },
-  { id: "arr", label: "Ngày đến", width: 110 },
-  { id: "dep", label: "Ngày rời", width: 110 },
+  { id: "arr", label: "Ngày đến", width: 165 },
+  { id: "dep", label: "Ngày rời", width: 165 },
 ];
 const itiData: Row[] = Array.from({ length: 10 }).map((_, i) => {
   const r: Row = { __id: `i${i + 1}` };
@@ -239,49 +267,98 @@ const itiData: Row[] = Array.from({ length: 10 }).map((_, i) => {
   return r;
 });
 
-/* ---------- Chi phí + Nhiên liệu + P&L ---------- */
+function toNum(v: string | undefined) {
+  if (!v) return 0;
+  const n = parseFloat(v.replace(/,/g, ""));
+  return isFinite(n) ? n : 0;
+}
+function fmt(n: number) {
+  if (!n) return "";
+  return n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+}
 
-function CostFieldColumn({ items }: { items: [string, string][] }) {
+/* ---------- Time summary ---------- */
+
+const TIME_ROWS = [
+  "Thời gian chuyến",
+  "Chạy có hàng",
+  "Chạy rỗng",
+  "Chạy luồng",
+  "Xếp hàng",
+  "Dỡ hàng",
+  "Thời gian chờ",
+  "Thời gian khác",
+];
+function TimeSummary() {
   return (
-    <div>
-      {items.map(([l, v]) => (
-        <Field key={l} label={l} labelWidth="w-28"><Input value={v} align="right" /></Field>
+    <div className="border border-ve-border bg-white">
+      <div className="border-b border-ve-border bg-ve-sectionBg px-3 py-1 text-[13px] font-semibold text-ve-text">
+        Tổng kết thời gian chuyến
+      </div>
+      <div className="flex bg-ve-headerBg text-[11px] font-semibold text-ve-text">
+        <div className="w-[150px] shrink-0 border-r border-ve-border px-1.5 py-1">Tác nghiệp</div>
+        <div className="w-[90px] shrink-0 border-r border-ve-border px-1.5 py-1 text-right">Số ngày</div>
+        <div className="w-[90px] shrink-0 border-r border-ve-border px-1.5 py-1 text-right">Tỷ lệ %</div>
+      </div>
+      {TIME_ROWS.map((r) => (
+        <div key={r} className="flex border-t border-ve-border text-[12px] hover:bg-ve-rowHover">
+          <div className="w-[150px] shrink-0 border-r border-ve-border px-1.5 py-[3px]">{r}</div>
+          <div className="w-[90px] shrink-0 border-r border-ve-border">
+            <input className="h-[22px] w-full border-0 bg-transparent px-1.5 text-right text-[12px] outline-none focus:bg-white focus:ring-1 focus:ring-ve-accent" />
+          </div>
+          <div className="w-[90px] shrink-0 border-r border-ve-border">
+            <input className="h-[22px] w-full border-0 bg-transparent px-1.5 text-right text-[12px] outline-none focus:bg-white focus:ring-1 focus:ring-ve-accent" />
+          </div>
+        </div>
       ))}
     </div>
   );
 }
 
-const costCol1: [string, string][] = [
-  ["Chi phí ngày tàu", ""],
-  ["Nhiên liệu", ""],
-  ["Cảng phí", ""],
-  ["Hoa hồng", ""],
-  ["Môi giới", ""],
-  ["Thuế cước", ""],
-  ["Liner", ""],
-  ["Thưởng dôi nhật", ""],
+/* ---------- Cost columns ---------- */
+
+function CostField({ label, value = "" }: { label: string; value?: string }) {
+  return (
+    <div className="flex items-center gap-2 py-[1px]">
+      <label className="w-32 shrink-0 text-right text-[12px] text-ve-label">{label}</label>
+      <div className="w-32">
+        <Input value={value} align="right" />
+      </div>
+    </div>
+  );
+}
+
+const costCol1: string[] = [
+  "Chi phí ngày tàu",
+  "Nhiên liệu",
+  "Cảng phí",
+  "Hoa hồng",
+  "Môi giới",
+  "Thuế cước",
+  "Liner",
+  "Thưởng dôi nhật",
 ];
-const costCol2: [string, string][] = [
-  ["Giám định", ""],
-  ["Kiểm đếm", ""],
-  ["Vật liệu", ""],
-  ["Cấu bờ", ""],
-  ["Xà lan", ""],
-  ["Kênh eo", ""],
-  ["Bồi dưỡng", ""],
-  ["Phí khác", ""],
+const costCol2: string[] = [
+  "Giám định",
+  "Kiểm đếm",
+  "Vật liệu",
+  "Cấu bờ",
+  "Xà lan",
+  "Kênh eo",
+  "Bồi dưỡng",
+  "Phí khác",
 ];
-const pnlItems: [string, string][] = [
-  ["Cước biển", ""],
-  ["Phạt dôi nhật", ""],
-  ["Bù chạy rỗng", ""],
-  ["Thu khác", ""],
-  ["Tổng doanh thu", ""],
-  ["Tổng chi phí", ""],
-  ["Lãi (Lỗ)", ""],
-  ["Lãi (Lỗ)/ Ngày", ""],
-  ["TCE", ""],
-  ["Điểm hoà vốn", ""],
+const pnlItems: string[] = [
+  "Cước biển",
+  "Phạt dôi nhật",
+  "Bù chạy rỗng",
+  "Thu khác",
+  "Tổng doanh thu",
+  "Tổng chi phí",
+  "Lãi (Lỗ)",
+  "Lãi (Lỗ)/ Ngày",
+  "TCE",
+  "Điểm hoà vốn",
 ];
 
 const costFuelCols: Column[] = [
@@ -290,34 +367,73 @@ const costFuelCols: Column[] = [
   { id: "qty", label: "Lượng (MT)", width: 100, align: "right" },
   { id: "amt", label: "Thành tiền", width: 130, align: "right" },
 ];
-const costFuelData: Row[] = [
-  { __id: "cf1", fuel: "FO", price: "", qty: "", amt: "" },
-  { __id: "cf2", fuel: "DO", price: "", qty: "", amt: "" },
-  { __id: "cf3", fuel: "", price: "", qty: "", amt: "" },
-  { __id: "cf4", fuel: "", price: "", qty: "", amt: "" },
-];
+const costFuelData: Row[] = FUEL_NAMES.map((n, i) => ({
+  __id: `cf${i + 1}`,
+  fuel: n,
+  price: "",
+  qty: "",
+  amt: "",
+}));
 
 function CostSection() {
   return (
-    <div className="grid grid-cols-12 gap-4 border-t border-ve-border bg-white px-3 py-3">
-      <div className="col-span-3">
-        <div className="mb-1 text-[12px] font-semibold uppercase tracking-wider text-ve-text">Chi phí khai thác</div>
-        <CostFieldColumn items={costCol1} />
+    <div className="flex flex-wrap gap-4 border-t border-ve-border bg-white px-3 py-3">
+      <div>
+        <div className="mb-1 text-[12px] font-semibold uppercase tracking-wider text-ve-text">
+          Chi phí khai thác
+        </div>
+        {costCol1.map((l) => (
+          <CostField key={l} label={l} />
+        ))}
       </div>
-      <div className="col-span-2 pt-5">
-        <CostFieldColumn items={costCol2} />
+      <div className="pt-5">
+        {costCol2.map((l) => (
+          <CostField key={l} label={l} />
+        ))}
       </div>
-      <div className="col-span-4 pt-1">
+      <div className="pt-1">
         <EditableTable
           storageKey="vce:costFuel"
           initialColumns={costFuelCols}
           initialRows={costFuelData}
           minVisibleRows={4}
+          hideActions
         />
+        <div className="mt-2 flex gap-2">
+          <button className="flex items-center gap-1 border border-ve-border bg-white px-3 py-1 text-[12px] text-ve-text hover:bg-ve-rowHover">
+            <Fuel className="h-4 w-4 text-orange-600" /> Tính nhiên liệu
+          </button>
+          <button className="flex items-center gap-1 border border-ve-border bg-white px-3 py-1 text-[12px] text-ve-text hover:bg-ve-rowHover">
+            <RefreshCw className="h-4 w-4 text-sky-600" /> Cập nhật giá
+          </button>
+        </div>
       </div>
-      <div className="col-span-3">
-        <CostFieldColumn items={pnlItems} />
+      <div className="pt-1">
+        <TimeSummary />
       </div>
+      <div>
+        <div className="mb-1 text-[12px] font-semibold uppercase tracking-wider text-ve-text">
+          P&L
+        </div>
+        {pnlItems.map((l) => (
+          <CostField key={l} label={l} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Itinerary title checkboxes ---------- */
+
+function ItineraryTitleRight() {
+  // Offset so checkboxes begin near the left edge of the "Cự ly" column.
+  // Widths before Cự ly: op(110)+port(240)+tz(70) = 420. Minus title label + gap.
+  const offset = 420 - 130;
+  return (
+    <div className="flex items-center gap-4 text-[12px] text-ve-text" style={{ marginLeft: offset }}>
+      <label className="flex items-center gap-1"><input type="checkbox" /> Kênh Suez</label>
+      <label className="flex items-center gap-1"><input type="checkbox" /> Kênh Panama</label>
+      <label className="flex items-center gap-1"><input type="checkbox" /> Kênh Kiel</label>
     </div>
   );
 }
@@ -325,6 +441,52 @@ function CostSection() {
 /* ---------- Page ---------- */
 
 function VoyageCharterEstimation() {
+  const [cargoRows, setCargoRows] = useState<Row[]>(cargoData);
+  const [itiRows, setItiRows] = useState<Row[]>(itiData);
+
+  const cargoFooter: FooterRow[] = useMemo(() => {
+    const sumQty = cargoRows.reduce((s, r) => s + toNum(r.qty), 0);
+    const sumFrt = cargoRows.reduce((s, r) => s + toNum(r.freight), 0);
+    const sumLiner = cargoRows.reduce((s, r) => s + toNum(r.liner), 0);
+    return [
+      {
+        cells: {
+          code: { text: "Tổng" },
+          qty: { text: fmt(sumQty) },
+          freight: { text: fmt(sumFrt) },
+          liner: { text: fmt(sumLiner) },
+        },
+      },
+    ];
+  }, [cargoRows]);
+
+  const itiFooter: FooterRow[] = useMemo(() => {
+    const sum = (k: string) => itiRows.reduce((s, r) => s + toNum(r[k]), 0);
+    return [
+      {
+        cells: {
+          op: { text: "Bù độ trượt" },
+          spd: { input: true },
+          berth: { input: true },
+          wait: { input: true },
+        },
+      },
+      {
+        cells: {
+          op: { text: "Tổng" },
+          dist: { text: fmt(sum("dist")) },
+          eca: { text: fmt(sum("eca")) },
+          spd: { text: fmt(sum("spd")) },
+          berth: { text: fmt(sum("berth")) },
+          wait: { text: fmt(sum("wait")) },
+          dem: { text: fmt(sum("dem")) },
+          des: { text: fmt(sum("des")) },
+          pf: { text: fmt(sum("pf")) },
+        },
+      },
+    ];
+  }, [itiRows]);
+
   return (
     <div className="min-h-screen bg-ve-app text-ve-text">
       <div className="mx-auto flex min-h-screen w-full max-w-[1900px] flex-col border-x border-ve-border bg-white">
@@ -344,6 +506,9 @@ function VoyageCharterEstimation() {
               initialColumns={cargoCols}
               initialRows={cargoData}
               minVisibleRows={5}
+              resizable
+              onRowsChange={setCargoRows}
+              footerRows={cargoFooter}
             />
           </div>
 
@@ -351,9 +516,13 @@ function VoyageCharterEstimation() {
             <EditableTable
               storageKey="vce:itinerary"
               title="Lịch trình chuyến"
+              titleRight={<ItineraryTitleRight />}
               initialColumns={itiCols}
               initialRows={itiData}
               minVisibleRows={10}
+              resizable
+              onRowsChange={setItiRows}
+              footerRows={itiFooter}
             />
           </div>
 
