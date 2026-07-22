@@ -10,7 +10,7 @@ export type Column = {
 export type Row = Record<string, string> & { __id: string };
 
 export type FooterCell = { text?: string; input?: boolean; value?: string };
-export type FooterRow = { cells: Record<string, FooterCell> };
+export type FooterRow = { cells: Partial<Record<string, FooterCell>> };
 
 type Props = {
   storageKey: string;
