@@ -174,7 +174,7 @@ function HeaderSection() {
   return (
     <div className="grid grid-cols-12 gap-3 border-b border-ve-border bg-white px-3 py-2">
       {/* Column 1: identifiers */}
-      <div className="col-span-3">
+      <div className="col-span-3 min-w-0">
         <Field label="Mã dự tính"><Input /></Field>
         <Field label="Mã đơn hàng"><Input /></Field>
         <Field label="Tên tàu"><Select /></Field>
@@ -195,7 +195,7 @@ function HeaderSection() {
       </div>
 
       {/* Column 2: voyage */}
-      <div className="col-span-3">
+      <div className="col-span-3 min-w-0">
         <Field label="Cảng chạy rỗng"><Select /></Field>
         <Field label="Cảng điều động"><Select /></Field>
         <Field label="Bắt đầu chuyến"><Select value="10/01/22 19:26" /></Field>
@@ -210,7 +210,7 @@ function HeaderSection() {
       </div>
 
       {/* Column 3: speed + fuel consumption */}
-      <div className="col-span-3">
+      <div className="col-span-3 min-w-0">
         <div className="flex items-center justify-between border-b border-ve-border">
           <div className="flex items-center gap-2 text-[12px]">
             <span className="text-ve-label">Tốc độ (hl/h)</span>
@@ -243,7 +243,7 @@ function HeaderSection() {
       </div>
 
       {/* Column 4: Lần chỉnh sửa gần nhất + fuel price */}
-      <div className="col-span-3">
+      <div className="col-span-3 min-w-0">
         <div className="flex items-center justify-between border-b border-ve-border pb-1">
           <span className="text-[12px] font-semibold text-ve-text">Lần chỉnh sửa gần nhất:</span>
           <div className="flex gap-1">
