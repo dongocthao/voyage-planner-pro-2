@@ -255,7 +255,7 @@ function HeaderSection() {
             </button>
           </div>
         </div>
-        <div className="mt-1">
+        <div className="mt-1 overflow-x-auto">
           <EditableTable
             storageKey="vce:costFuel"
             initialColumns={costFuelCols}
