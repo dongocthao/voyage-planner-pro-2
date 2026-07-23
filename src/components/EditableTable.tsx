@@ -137,7 +137,7 @@ export default function EditableTable({
         </div>
       )}
 
-      <div style={{ width: totalWidth, maxWidth: "100%" }}>
+      <div style={{ width: totalWidth }}>
         {/* Header */}
         <div
           className="flex bg-ve-headerBg text-[11px] font-semibold text-ve-text"
