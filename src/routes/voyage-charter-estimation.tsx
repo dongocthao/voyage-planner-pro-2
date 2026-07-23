@@ -520,30 +520,34 @@ function VoyageCharterEstimation() {
           {/* Left/main area */}
           <div className="flex flex-col">
             <div className="border-b border-ve-border bg-white p-3">
-              <EditableTable
-                storageKey="vce:cargoes"
-                title="Danh sách hàng hoá"
-                initialColumns={cargoCols}
-                initialRows={cargoData}
-                minVisibleRows={7}
-                resizable
-                onRowsChange={setCargoRows}
-                footerRows={cargoFooter}
-              />
+              <div className="overflow-x-auto">
+                <EditableTable
+                  storageKey="vce:cargoes"
+                  title="Danh sách hàng hoá"
+                  initialColumns={cargoCols}
+                  initialRows={cargoData}
+                  minVisibleRows={7}
+                  resizable
+                  onRowsChange={setCargoRows}
+                  footerRows={cargoFooter}
+                />
+              </div>
             </div>
 
             <div className="border-b border-ve-border bg-white p-3">
-              <EditableTable
-                storageKey="vce:itinerary"
-                title="Lịch trình chuyến"
-                titleRight={<ItineraryTitleRight />}
-                initialColumns={itiCols}
-                initialRows={itiData}
-                minVisibleRows={10}
-                resizable
-                onRowsChange={setItiRows}
-                footerRows={itiFooter}
-              />
+              <div className="overflow-x-auto">
+                <EditableTable
+                  storageKey="vce:itinerary"
+                  title="Lịch trình chuyến"
+                  titleRight={<ItineraryTitleRight />}
+                  initialColumns={itiCols}
+                  initialRows={itiData}
+                  minVisibleRows={10}
+                  resizable
+                  onRowsChange={setItiRows}
+                  footerRows={itiFooter}
+                />
+              </div>
             </div>
 
             {/* Bottom: notes + time summary */}
