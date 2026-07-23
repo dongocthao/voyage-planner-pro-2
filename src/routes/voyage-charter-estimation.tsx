@@ -181,7 +181,7 @@ function HeaderSection() {
         <Field label="DWT">
           <div className="flex items-center gap-2">
             <div className="w-24"><Input value="34,752" align="right" /></div>
-            <span className="text-[12px] text-ve-label">Phí ngày tàu vận doanh</span>
+            <span className="whitespace-nowrap text-[12px] text-ve-label">Phí ngày tàu vận doanh</span>
           </div>
         </Field>
         <Field label="Kiểu khai thác">
