@@ -518,7 +518,7 @@ function VoyageCharterEstimation() {
 
         <div className="grid flex-1 grid-cols-[minmax(0,1fr)_360px]">
           {/* Left/main area */}
-          <div className="flex flex-col">
+          <div className="flex min-w-0 flex-col">
             <div className="border-b border-ve-border bg-white p-3">
               <div className="overflow-x-auto">
                 <EditableTable
