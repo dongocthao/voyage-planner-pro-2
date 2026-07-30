@@ -11,7 +11,13 @@ import {
   AlertTriangle,
   Globe,
 } from "lucide-react";
-import EditableTable, { type Column, type Row } from "@/components/EditableTable";
+import { useState } from "react";
+import EditableTable, {
+  type Column,
+  type Row,
+  type FooterRow,
+} from "@/components/EditableTable";
+import * as T from "@/components/itinerary-tabs";
 import { ViewModeProvider, useViewMode } from "@/lib/view-mode";
 
 export const Route = createFileRoute("/")({
