@@ -11,18 +11,35 @@ import {
   AlertTriangle,
   Globe,
 } from "lucide-react";
-import EditableTable, { type Column, type Row } from "@/components/EditableTable";
+import { useState } from "react";
+import EditableTable, {
+  type Column,
+  type Row,
+  type FooterRow,
+} from "@/components/EditableTable";
+import * as T from "@/components/itinerary-tabs";
 import { ViewModeProvider, useViewMode } from "@/lib/view-mode";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Voyage Estimator" },
-      { name: "description", content: "Voyage Estimator — P&L, cargoes and itinerary." },
+      { title: "IMOS Voyage Estimator" },
+      {
+        name: "description",
+        content: "IMOS Voyage Estimator — P&L, cargoes, bunkers and itinerary grids.",
+      },
+      { property: "og:title", content: "IMOS Voyage Estimator" },
+      {
+        property: "og:description",
+        content: "IMOS Voyage Estimator — P&L, cargoes, bunkers and itinerary grids.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: VoyageEstimator,
 });
+
 
 /* ---------- Reusable bits ---------- */
 
@@ -251,9 +268,13 @@ function CargoesSection() {
 
 /* ---------- Itinerary ---------- */
 
-const itineraryTabs = [
-  "Cargo", "Draft/Restrictions", "Vessel Draft", "Charterer", "Port/Date", "Bunkers", "Port/Date Group",
-];
+type TabDef = {
+  key: string;
+  label: string;
+  columns: Column[];
+  rows: Row[];
+  footerRows?: FooterRow[];
+};
 
 const itineraryColumns: Column[] = [
   { id: "port", label: "Port", width: 140 },
@@ -283,25 +304,47 @@ const itineraryData: Row[] = [
   { __id: "i6", port: "DONGGUAN", miles: "58", wf: "7.00", draft: "", unit: "D", load: "Summer Salt", sal: "1.025", ifoQty: "", ifoPrc: "", lsfQty: "", lsfPrc: "", curr: "USD", portExp: "40,000", baseExp: "40,000", grp: "2 : LIQUID", gs: "1", grade: "MIXE" },
 ];
 
+const ITINERARY_TABS: TabDef[] = [
+  { key: "cargo", label: "Cargo", columns: T.cargoTabColumns, rows: T.cargoTabRows, footerRows: T.cargoTabFooter },
+  { key: "exp", label: "Exp Details", columns: T.expDetailsColumns, rows: T.expDetailsRows },
+  { key: "draft", label: "Draft/Restrictions", columns: T.draftColumns, rows: T.draftRows },
+  { key: "vessel", label: "Vessel Draft", columns: itineraryColumns, rows: itineraryData },
+  { key: "charterer", label: "Charterer", columns: T.chartererColumns, rows: T.chartererRows, footerRows: T.chartererFooter },
+  { key: "custom", label: "Custom", columns: T.customColumns, rows: T.customRows },
+  { key: "portdate", label: "Port/Date", columns: T.portDateColumns, rows: T.portDateRows },
+  { key: "bunkers", label: "Bunkers", columns: T.bunkerTabColumns, rows: T.bunkerTabRows },
+  { key: "pdgroup", label: "Port/Date Group", columns: T.portDateColumns, rows: T.portDateRows },
+];
+
 function ItinerarySection() {
+  const [active, setActive] = useState(0);
+  const tab = ITINERARY_TABS[active];
   return (
     <div className="bg-white">
-      <div className="flex border-b border-ve-border bg-white text-[12px]">
-        {itineraryTabs.map((t, i) => (
+      <div className="flex flex-wrap border-b border-ve-border bg-white text-[12px]">
+        {ITINERARY_TABS.map((t, i) => (
           <button
-            key={t}
-            className={`border-r border-ve-border px-3 py-1.5 ${i === 3 ? "border-b-2 border-b-ve-accent font-semibold text-ve-text" : "text-ve-label hover:text-ve-text"}`}
+            key={t.key}
+            type="button"
+            onClick={() => setActive(i)}
+            className={`border-r border-ve-border px-3 py-1.5 ${i === active ? "border-b-2 border-b-ve-accent font-semibold text-ve-text" : "text-ve-label hover:text-ve-text"}`}
           >
-            {t}
+            {t.label}
           </button>
         ))}
       </div>
-      <EditableTable
-        storageKey="itinerary"
-        title="Itinerary"
-        initialColumns={itineraryColumns}
-        initialRows={itineraryData}
-      />
+      <div className="overflow-x-auto">
+        <EditableTable
+          key={tab.key}
+          storageKey={`itinerary:${tab.key}`}
+          title="Itinerary"
+          initialColumns={tab.columns}
+          initialRows={tab.rows}
+          footerRows={tab.footerRows}
+          resizable
+        />
+      </div>
+
 
       {/* Bunker Sensitivity */}
       <div className="border-t border-ve-border px-3 py-3">
