@@ -17,12 +17,23 @@ import { ViewModeProvider, useViewMode } from "@/lib/view-mode";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Voyage Estimator" },
-      { name: "description", content: "Voyage Estimator — P&L, cargoes and itinerary." },
+      { title: "IMOS Voyage Estimator" },
+      {
+        name: "description",
+        content: "IMOS Voyage Estimator — P&L, cargoes, bunkers and itinerary grids.",
+      },
+      { property: "og:title", content: "IMOS Voyage Estimator" },
+      {
+        property: "og:description",
+        content: "IMOS Voyage Estimator — P&L, cargoes, bunkers and itinerary grids.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: VoyageEstimator,
 });
+
 
 /* ---------- Reusable bits ---------- */
 
