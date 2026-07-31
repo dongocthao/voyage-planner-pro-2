@@ -380,66 +380,73 @@ const pnlExpenses = [
   { l: "Misc. Expenses", v: "15,000.00" },
 ];
 
-function PnLRow({ label, value, bold, sub }: { label: string; value: string; bold?: boolean; sub?: boolean }) {
-  return (
-    <div className={`flex items-center justify-between border-b border-ve-border px-3 py-1 text-[12px] ${bold ? "font-semibold" : ""} ${sub ? "pl-6 text-ve-label" : ""}`}>
-      <span>{label}</span>
-      <span className="tabular-nums">{value}</span>
-    </div>
-  );
-}
+type PnLItem = {
+  label: string;
+  value: string;
+  kind?: "section" | "bold" | "sub";
+  node?: React.ReactNode;
+};
+
+const pnlItems: PnLItem[] = [
+  { label: "REVENUES", value: "", kind: "section" },
+  ...pnlRevenues.map((r) => ({ label: r.l, value: r.v, kind: "sub" as const })),
+  { label: "Total Revenues", value: "306,968.75", kind: "bold" },
+  { label: "EXPENSES", value: "", kind: "section" },
+  ...pnlExpenses.map((r) => ({ label: r.l, value: r.v, kind: "sub" as const })),
+  { label: "Total Expenses", value: "201,172.85", kind: "bold" },
+  { label: "Voyage Result:", value: "105,795.90", kind: "bold" },
+  { label: "Net Daily TCE:", value: "6,350.01", kind: "bold", node: <input type="checkbox" className="h-3 w-3" /> },
+  { label: "RUNNING COST", value: "", kind: "section" },
+  { label: "Total Running Cost", value: "" },
+  { label: "Profit (Loss)", value: "105,795.9", kind: "bold" },
+  { label: "Net Voyage Days", value: "16.66", kind: "bold" },
+  { label: "Daily Profit (Loss)", value: "6,350.01", kind: "bold" },
+  { label: "Total/Off hire days", value: "16.66" },
+  { label: "Port/sea days", value: "16.66" },
+  { label: "Breakeven", value: "18.64", kind: "bold" },
+  { label: "Per Unit Cost", value: "17.80", kind: "bold" },
+  { label: "Freight Rate (USD/t)", value: "28.5044", kind: "bold" },
+  { label: "Deviation TCE", value: "", kind: "bold", node: <input type="checkbox" className="h-3 w-3" /> },
+  { label: "CO2 Cost", value: "" },
+  { label: "CO2 Adjusted Profit (Loss)", value: "105,795.90", kind: "bold" },
+];
 
 function PnLPanel() {
+  let dataIdx = -1;
   return (
-    <aside className="flex w-[360px] shrink-0 flex-col border-l border-ve-border bg-white">
-      <div className="border-b border-ve-border bg-ve-sectionBg px-3 py-1 text-[13px] font-semibold">P&amp;L</div>
+    <aside className="flex w-[270px] shrink-0 flex-col border-l border-ve-border bg-white">
+      <div className="border-b border-ve-border bg-ve-sectionBg px-2 py-1 text-[13px] font-semibold">
+        P&amp;L
+      </div>
       <div className="flex border-b border-ve-border text-[12px]">
-        <button className="flex-1 border-b-2 border-b-ve-accent bg-white px-3 py-1.5 font-semibold">All Periods</button>
-        <button className="flex-1 px-3 py-1.5 text-ve-label hover:text-ve-text">Estimated</button>
+        <button className="flex-1 border-b-2 border-b-ve-accent bg-white px-2 py-1.5 font-semibold">
+          All Periods
+        </button>
+        <button className="flex-1 px-2 py-1.5 text-ve-label hover:text-ve-text">Estimated</button>
       </div>
 
-      <PnLRow label="REVENUES" value="" bold />
-      {pnlRevenues.map((r) => <PnLRow key={r.l} label={r.l} value={r.v} sub />)}
-      <PnLRow label="Total Revenues" value="306,968.75" bold />
+      {pnlItems.map((it) => {
+        const isSection = it.kind === "section";
+        if (!isSection) dataIdx += 1;
+        const bg = isSection ? "bg-ve-sectionBg" : dataIdx % 2 === 0 ? "bg-white" : "bg-ve-altRow";
+        return (
+          <div
+            key={it.label}
+            className={`flex items-center justify-between gap-1 border-b border-ve-border px-2 py-1 text-[12px] ${bg} ${it.kind === "bold" || isSection ? "font-semibold" : ""} ${it.kind === "sub" ? "pl-4 text-ve-label" : ""}`}
+          >
+            <span className="flex items-center gap-1 truncate">
+              {it.node}
+              {it.label}
+            </span>
+            <span className="shrink-0 tabular-nums">{it.value}</span>
+          </div>
+        );
+      })}
 
-      <PnLRow label="EXPENSES" value="" bold />
-      {pnlExpenses.map((r) => <PnLRow key={r.l} label={r.l} value={r.v} sub />)}
-      <PnLRow label="Total Expenses" value="201,172.85" bold />
-
-      <div className="flex items-center justify-between border-b border-ve-border px-3 py-1.5 text-[12px]">
-        <span>Voyage Result:</span>
-        <span className="font-semibold tabular-nums">105,795.90</span>
-      </div>
-      <div className="flex items-center justify-between border-b border-ve-border px-3 py-1.5 text-[12px]">
-        <span className="flex items-center gap-2">
-          <input type="checkbox" className="h-3 w-3" /> Net Daily TCE:
-        </span>
-        <span className="font-semibold tabular-nums">6,350.01</span>
-      </div>
-
-      <PnLRow label="RUNNING COST" value="" bold />
-      <PnLRow label="Total Running Cost" value="" />
-
-      <PnLRow label="Profit (Loss)" value="105,795.9" bold />
-      <PnLRow label="Net Voyage Days" value="16.66" bold />
-      <PnLRow label="Daily Profit (Loss)" value="6,350.01" bold />
-      <PnLRow label="Total/Off hire days" value="16.66" />
-      <PnLRow label="Port/sea days" value="16.66" />
-      <PnLRow label="Breakeven" value="18.64" bold />
-      <PnLRow label="Per Unit Cost" value="17.80" bold />
-      <PnLRow label="Freight Rate (USD/t)" value="28.5044" bold />
-
-      <div className="flex items-center justify-between border-b border-ve-border px-3 py-1 text-[12px]">
-        <span className="font-semibold">Deviation TCE</span>
-        <input type="checkbox" className="h-3 w-3" />
-      </div>
-      <PnLRow label="CO2 Cost" value="" />
-      <PnLRow label="CO2 Adjusted Profit (Loss)" value="105,795.90" bold />
-
-      <div className="border-b border-ve-border bg-ve-sectionBg px-3 py-1 text-[12px] font-semibold tracking-widest">
+      <div className="border-b border-ve-border bg-ve-sectionBg px-2 py-1 text-[12px] font-semibold tracking-widest">
         ESTIMATE REMARKS
       </div>
-      <textarea className="min-h-[140px] flex-1 resize-none border-0 p-3 text-[12px] outline-none" />
+      <textarea className="min-h-[140px] flex-1 resize-none border-0 p-2 text-[12px] outline-none" />
     </aside>
   );
 }
