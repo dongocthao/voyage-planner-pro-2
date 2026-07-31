@@ -10,6 +10,7 @@ import {
   RefreshCw,
   AlertTriangle,
   Globe,
+  Minus,
   X,
 } from "lucide-react";
 import { useCallback, useState } from "react";
@@ -163,78 +164,208 @@ const bunkerData: Row[] = [
   { __id: "b4", name: "LSG", symbol: "", basis: "", price: "700.00", sBal: "0.10", sLad: "0.10", pLd: "2.00", pDis: "2.00", idle: "1.00" },
 ];
 
-const bunkerPlanColumns: Column[] = [
-  { id: "port", label: "Port", width: 130 },
-  { id: "fn", label: "F", width: 30 },
-  { id: "eta", label: "ETA", width: 100 },
-  { id: "etd", label: "ETD", width: 100 },
-  { id: "grade", label: "Grade", width: 60 },
-  { id: "rob", label: "ROB Arr", width: 70, align: "right" },
-  { id: "qty", label: "Qty", width: 70, align: "right" },
-  { id: "price", label: "Price", width: 70, align: "right" },
-  { id: "cost", label: "Cost", width: 90, align: "right" },
-  { id: "supplier", label: "Supplier", width: 110 },
+const bunkerPlanPorts = [
+  { port: "HONG KONG", f: "C" },
+  { port: "CAPE OF GOOD HOPE", f: "P" },
+  { port: "ENGLISH CHANNEL", f: "P" },
+  { port: "ROTTERDAM", f: "L" },
+  { port: "ENGLISH CHANNEL", f: "P" },
+  { port: "CAPE OF GOOD HOPE", f: "P" },
+  { port: "FUJAIRAH", f: "D" },
 ];
-const bunkerPlanRows: Row[] = [
-  { __id: "p1", port: "DUMAI", fn: "B", eta: "10/01/22 19:26", etd: "11/01/22 04:00", grade: "IFO", rob: "420.00", qty: "300.00", price: "531.98", cost: "159,594.00", supplier: "PERTAMINA" },
-  { __id: "p2", port: "SINGAPORE STRAIT", fn: "P", eta: "12/01/22 08:00", etd: "12/01/22 20:00", grade: "LSF", rob: "180.00", qty: "250.00", price: "550.00", cost: "137,500.00", supplier: "SENTEK" },
-  { __id: "p3", port: "YANTAI", fn: "L", eta: "20/01/22 06:00", etd: "21/01/22 18:00", grade: "MDO", rob: "60.00", qty: "40.00", price: "650.00", cost: "26,000.00", supplier: "SINOPEC" },
-  { __id: "p4", port: "HONG KONG", fn: "D", eta: "25/01/22 09:00", etd: "26/01/22 03:00", grade: "LSG", rob: "35.00", qty: "20.00", price: "700.00", cost: "14,000.00", supplier: "CHIMBUSCO" },
-];
+
+const BP_GRADES = ["VLS0.5%", "LSG", "MDO", "MGO"];
+
+function BpField({
+  label,
+  labelWidth = "w-24",
+  children,
+}: {
+  label: string;
+  labelWidth?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center gap-1.5 py-[1px]">
+      <label className={`${labelWidth} shrink-0 text-right text-[12px] text-ve-text`}>
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
 
 function BunkerPlanningModal({ onClose }: { onClose: () => void }) {
+  const [grade, setGrade] = useState(0);
+  const cols = [
+    { id: "port", label: "Port Name", w: 190, align: "left" },
+    { id: "f", label: "F", w: 34, align: "left" },
+    { id: "sea", label: "Sea Cons", w: 100, align: "right" },
+    { id: "robArr", label: "ROB Arr", w: 100, align: "right" },
+    { id: "portCons", label: "Port Cons", w: 100, align: "right" },
+    { id: "receive", label: "Receive", w: 100, align: "right" },
+    { id: "price", label: "Price", w: 100, align: "right" },
+    { id: "robDep", label: "ROB Dep", w: 100, align: "right" },
+  ] as const;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/30 p-6">
-      <div className="w-full max-w-[1100px] border border-ve-border bg-white shadow-lg">
-        <div className="flex items-center justify-between border-b border-ve-border bg-ve-sectionBg px-3 py-1.5">
-          <span className="text-[13px] font-semibold">Bunker Planning</span>
-          <button
-            type="button"
-            onClick={onClose}
-            className="ve-tool-btn px-2 text-[12px]"
-            aria-label="Close"
-          >
-            <X className="h-4 w-4 text-ve-label" />
-          </button>
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 p-6">
+      <div className="w-full max-w-[820px] border border-ve-border bg-ve-app shadow-xl">
+        {/* Title bar */}
+        <div className="flex items-center justify-between bg-ve-titleBar px-3 py-2">
+          <span className="text-[13px] font-bold text-ve-titleBarText">
+            Bunker Planning: Estimate ADM-000189
+          </span>
+          <div className="flex items-center gap-3">
+            <button type="button" className="text-ve-titleBarText/80 hover:text-ve-titleBarText">
+              <Minus className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="text-ve-titleBarText/80 hover:text-ve-titleBarText"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-3 border-b border-ve-border px-3 py-2">
-          <Field label="Vessel"><Input value="VESON TRADER" /></Field>
-          <Field label="Voyage No"><Input value="22001" align="right" /></Field>
-          <Field label="Opr Type"><Input value="TCOV" /></Field>
-          <Field label="Status"><Input value="Estimate" /></Field>
+        {/* Grade tabs */}
+        <div className="flex items-end gap-4 px-4 pt-3 text-[12px]">
+          {BP_GRADES.map((g, i) => (
+            <button
+              key={g}
+              type="button"
+              onClick={() => setGrade(i)}
+              className={`pb-1 ${i === grade ? "border-b-2 border-b-ve-accent font-semibold text-ve-text" : "text-ve-label hover:text-ve-text"}`}
+            >
+              {g}
+            </button>
+          ))}
         </div>
 
-        <div className="overflow-x-auto px-3 py-2">
-          <EditableTable
-            storageKey="bunker-planning"
-            title="Bunker Requirements"
-            initialColumns={bunkerPlanColumns}
-            initialRows={bunkerPlanRows}
-            minVisibleRows={6}
-            resizable
-          />
+        {/* Top fields */}
+        <div className="flex flex-wrap items-start gap-x-6 gap-y-1 px-4 pt-3">
+          <div>
+            <BpField label="Init Quantity">
+              <div className="w-24"><Input value="458.000" align="right" disabled /></div>
+            </BpField>
+            <BpField label="End Quantity">
+              <div className="w-24"><Input value="458.000" align="right" disabled /></div>
+            </BpField>
+          </div>
+          <div>
+            <BpField label="Init Price" labelWidth="w-16">
+              <div className="w-24"><Input value="0.00" align="right" /></div>
+            </BpField>
+            <BpField label="End Price" labelWidth="w-16">
+              <div className="w-24"><Input value="0.00" align="right" /></div>
+            </BpField>
+          </div>
+          <div>
+            <BpField label="Calc Method" labelWidth="w-20">
+              <div className="w-28"><Input value="FIFO" /></div>
+            </BpField>
+            <label className="flex items-center gap-1.5 pt-1 text-[12px] text-ve-text">
+              <input type="checkbox" className="h-3.5 w-3.5" />
+              Transfer Received When Fixing
+            </label>
+          </div>
+          <div className="ml-auto">
+            <BpField label="Total Cons" labelWidth="w-20">
+              <div className="w-28"><Input value="0.000" align="right" disabled /></div>
+            </BpField>
+          </div>
         </div>
 
-        <div className="flex items-center justify-end gap-2 border-t border-ve-border bg-ve-toolbar px-3 py-2 text-[12px]">
-          <button type="button" className="ve-tool-btn px-3 font-semibold text-ve-accent">
-            Calculate
-          </button>
-          <button type="button" className="ve-tool-btn px-3 font-semibold text-ve-accent">
-            Update Prices
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="ve-tool-btn px-3 font-semibold text-ve-text"
-          >
-            Close
-          </button>
+        {/* Grid */}
+        <div className="px-4 pt-3">
+          <div className="overflow-x-auto border border-ve-border bg-white">
+            <table className="w-full border-collapse text-[12px]">
+              <thead>
+                <tr className="bg-ve-sectionBg">
+                  {cols.map((c) => (
+                    <th
+                      key={c.id}
+                      style={{ width: c.w }}
+                      className={`border-b border-r border-ve-border px-1.5 py-1 font-semibold text-ve-text ${c.align === "right" ? "text-right" : "text-left"}`}
+                    >
+                      {c.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {bunkerPlanPorts.map((r, i) => (
+                  <tr key={`${r.port}-${i}`} className={i % 2 ? "bg-ve-altRow" : "bg-white"}>
+                    <td className="border-r border-ve-border px-1.5 py-[3px] font-semibold text-ve-text">
+                      {r.port}
+                    </td>
+                    <td className="border-r border-ve-border px-1.5 py-[3px]">{r.f}</td>
+                    <td className="border-r border-ve-border px-1.5 py-[3px] text-right tabular-nums">0.000</td>
+                    <td className="border-r border-ve-border px-1.5 py-[3px] text-right tabular-nums">458.000</td>
+                    <td className="border-r border-ve-border px-1.5 py-[3px] text-right tabular-nums">0.00</td>
+                    <td className="border-r border-ve-border px-1.5 py-[3px] text-right tabular-nums"></td>
+                    <td className="border-r border-ve-border px-1.5 py-[3px] text-right tabular-nums"></td>
+                    <td className="px-1.5 py-[3px] text-right tabular-nums">458.000</td>
+                  </tr>
+                ))}
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <tr key={`empty${i}`} className={(bunkerPlanPorts.length + i) % 2 ? "bg-ve-altRow" : "bg-white"}>
+                    {cols.map((c) => (
+                      <td key={c.id} className="border-r border-ve-border px-1.5 py-[3px]">
+                        &nbsp;
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Totals row */}
+        <div className="flex items-center gap-2 px-4 pt-2 text-[12px]">
+          <span className="w-[190px] text-right font-semibold text-ve-text">Totals</span>
+          <div className="w-[100px]"><Input value="0.000" align="right" disabled /></div>
+          <div className="w-[100px]" />
+          <div className="w-[100px]"><Input value="0.000" align="right" disabled /></div>
+          <div className="w-[100px]"><Input value="0.000" align="right" disabled /></div>
+          <label className="flex items-center gap-1.5 text-ve-text">
+            <input type="checkbox" className="h-3.5 w-3.5" /> Disable Backup Fuels
+          </label>
+        </div>
+
+        <div className="flex items-center justify-end gap-2 px-4 pt-1 text-[12px]">
+          <span className="text-ve-text">Fuel Zone Set</span>
+          <div className="w-40"><Input /></div>
+        </div>
+
+        {/* Bottom options */}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-1 px-4 py-3 text-[12px]">
+          <div className="space-y-1">
+            <label className="flex items-center gap-1.5 text-ve-text">
+              <input type="checkbox" className="h-3.5 w-3.5" /> Optimize Liftings for Cargo:
+              <span className="w-40"><Input disabled /></span>
+            </label>
+            <label className="flex items-center gap-1.5 text-ve-text">
+              <input type="checkbox" className="h-3.5 w-3.5" /> Use Scrubber
+            </label>
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <span className="text-ve-text">CO2 Price Per MT</span>
+            <div className="w-16"><Input value="EUR" /></div>
+            <div className="w-20"><Input value="80.000" align="right" /></div>
+            <span className="text-ve-text">CO2 Exchange Rate</span>
+            <div className="w-20"><Input value="0.952" align="right" /></div>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
 
 function HeaderSection() {
   const [planOpen, setPlanOpen] = useState(false);

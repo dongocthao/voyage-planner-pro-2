@@ -73,6 +73,8 @@
   --color-ve-disabled: var(--ve-disabled);
   --color-ve-totalBg: var(--ve-total-bg);
   --color-ve-altRow: var(--ve-alt-row);
+  --color-ve-titleBar: var(--ve-title-bar);
+  --color-ve-titleBarText: var(--ve-title-bar-text);
 }
 
 @layer components {
@@ -136,6 +138,8 @@
   --ve-disabled: oklch(0.92 0.008 247);
   --ve-total-bg: oklch(0.96 0.006 247);
   --ve-alt-row: oklch(0.965 0.035 150);
+  --ve-title-bar: oklch(0.28 0.012 247);
+  --ve-title-bar-text: oklch(0.99 0 0);
 }
 
 .dark {
