@@ -72,6 +72,7 @@
   --color-ve-rowHover: var(--ve-row-hover);
   --color-ve-disabled: var(--ve-disabled);
   --color-ve-totalBg: var(--ve-total-bg);
+  --color-ve-altRow: var(--ve-alt-row);
 }
 
 @layer components {
