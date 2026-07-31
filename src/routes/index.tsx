@@ -339,15 +339,36 @@ const cargoData: Row[] = [
 ];
 
 function CargoesSection() {
+  const [qtyTotal, setQtyTotal] = useState(() =>
+    cargoData.reduce((s, r) => s + (Number((r.qty ?? "").replace(/,/g, "")) || 0), 0),
+  );
+  const handleRows = useCallback((rows: Row[]) => {
+    setQtyTotal(rows.reduce((s, r) => s + (Number((r.qty ?? "").replace(/,/g, "")) || 0), 0));
+  }, []);
+
+  const cargoFooter: FooterRow[] = [
+    {
+      cells: {
+        group: { text: "Total" },
+        qty: { text: qtyTotal.toLocaleString("en-US") },
+      },
+    },
+  ];
+
   return (
     <div className="border-b border-ve-border bg-white">
-      <EditableTable
-        storageKey="cargoes"
-        title="Cargoes"
-        initialColumns={cargoColumns}
-        initialRows={cargoData}
-      />
-      <div className="px-3 py-1 text-right text-[12px] font-semibold">Total: 8,000</div>
+      <div className="overflow-x-auto">
+        <EditableTable
+          storageKey="cargoes"
+          title="Cargoes"
+          initialColumns={cargoColumns}
+          initialRows={cargoData}
+          footerRows={cargoFooter}
+          onRowsChange={handleRows}
+          resizable
+        />
+      </div>
+      <div className="h-4" />
     </div>
   );
 }
