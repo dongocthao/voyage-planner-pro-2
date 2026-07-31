@@ -10,8 +10,9 @@ import {
   RefreshCw,
   AlertTriangle,
   Globe,
+  X,
 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import EditableTable, {
   type Column,
   type Row,
@@ -53,9 +54,9 @@ function Field({
   labelWidth?: string;
 }) {
   return (
-    <div className="flex items-center gap-2 py-[3px]">
+    <div className="flex items-center gap-1.5 py-[1px]">
       <label className={`${labelWidth} shrink-0 text-[12px] text-ve-label`}>{label}</label>
-      <div className="flex-1">{children}</div>
+      <div className="min-w-0 flex-1">{children}</div>
     </div>
   );
 }
@@ -162,62 +163,145 @@ const bunkerData: Row[] = [
   { __id: "b4", name: "LSG", symbol: "", basis: "", price: "700.00", sBal: "0.10", sLad: "0.10", pLd: "2.00", pDis: "2.00", idle: "1.00" },
 ];
 
-function HeaderSection() {
+const bunkerPlanColumns: Column[] = [
+  { id: "port", label: "Port", width: 130 },
+  { id: "fn", label: "F", width: 30 },
+  { id: "eta", label: "ETA", width: 100 },
+  { id: "etd", label: "ETD", width: 100 },
+  { id: "grade", label: "Grade", width: 60 },
+  { id: "rob", label: "ROB Arr", width: 70, align: "right" },
+  { id: "qty", label: "Qty", width: 70, align: "right" },
+  { id: "price", label: "Price", width: 70, align: "right" },
+  { id: "cost", label: "Cost", width: 90, align: "right" },
+  { id: "supplier", label: "Supplier", width: 110 },
+];
+const bunkerPlanRows: Row[] = [
+  { __id: "p1", port: "DUMAI", fn: "B", eta: "10/01/22 19:26", etd: "11/01/22 04:00", grade: "IFO", rob: "420.00", qty: "300.00", price: "531.98", cost: "159,594.00", supplier: "PERTAMINA" },
+  { __id: "p2", port: "SINGAPORE STRAIT", fn: "P", eta: "12/01/22 08:00", etd: "12/01/22 20:00", grade: "LSF", rob: "180.00", qty: "250.00", price: "550.00", cost: "137,500.00", supplier: "SENTEK" },
+  { __id: "p3", port: "YANTAI", fn: "L", eta: "20/01/22 06:00", etd: "21/01/22 18:00", grade: "MDO", rob: "60.00", qty: "40.00", price: "650.00", cost: "26,000.00", supplier: "SINOPEC" },
+  { __id: "p4", port: "HONG KONG", fn: "D", eta: "25/01/22 09:00", etd: "26/01/22 03:00", grade: "LSG", rob: "35.00", qty: "20.00", price: "700.00", cost: "14,000.00", supplier: "CHIMBUSCO" },
+];
+
+function BunkerPlanningModal({ onClose }: { onClose: () => void }) {
   return (
-    <div className="grid grid-cols-12 gap-4 border-b border-ve-border bg-white px-3 py-2">
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/30 p-6">
+      <div className="w-full max-w-[1100px] border border-ve-border bg-white shadow-lg">
+        <div className="flex items-center justify-between border-b border-ve-border bg-ve-sectionBg px-3 py-1.5">
+          <span className="text-[13px] font-semibold">Bunker Planning</span>
+          <button
+            type="button"
+            onClick={onClose}
+            className="ve-tool-btn px-2 text-[12px]"
+            aria-label="Close"
+          >
+            <X className="h-4 w-4 text-ve-label" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-4 gap-3 border-b border-ve-border px-3 py-2">
+          <Field label="Vessel"><Input value="VESON TRADER" /></Field>
+          <Field label="Voyage No"><Input value="22001" align="right" /></Field>
+          <Field label="Opr Type"><Input value="TCOV" /></Field>
+          <Field label="Status"><Input value="Estimate" /></Field>
+        </div>
+
+        <div className="overflow-x-auto px-3 py-2">
+          <EditableTable
+            storageKey="bunker-planning"
+            title="Bunker Requirements"
+            initialColumns={bunkerPlanColumns}
+            initialRows={bunkerPlanRows}
+            minVisibleRows={6}
+            resizable
+          />
+        </div>
+
+        <div className="flex items-center justify-end gap-2 border-t border-ve-border bg-ve-toolbar px-3 py-2 text-[12px]">
+          <button type="button" className="ve-tool-btn px-3 font-semibold text-ve-accent">
+            Calculate
+          </button>
+          <button type="button" className="ve-tool-btn px-3 font-semibold text-ve-accent">
+            Update Prices
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="ve-tool-btn px-3 font-semibold text-ve-text"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HeaderSection() {
+  const [planOpen, setPlanOpen] = useState(false);
+  return (
+    <div className="flex gap-2 border-b border-ve-border bg-white py-1.5 pl-2 pr-0">
       {/* Column 1 */}
-      <div className="col-span-3">
-        <Field label="Vessel">
+      <div className="min-w-0 flex-1">
+        <Field label="Vessel" labelWidth="w-24">
           <Select value="" />
         </Field>
-        <Field label="TC In Code"><Input /></Field>
-        <Field label="Vessel DWT"><Input value="34,752" align="right" /></Field>
-        <Field label="Dly Hire/Addr">
+        <Field label="TC In Code" labelWidth="w-24"><Input /></Field>
+        <Field label="Vessel DWT" labelWidth="w-24"><Input value="34,752" align="right" /></Field>
+        <Field label="Dly Hire/Addr" labelWidth="w-24">
           <div className="flex gap-1">
             <Input value="0.00" align="right" />
             <Input value="0.00" align="right" />
           </div>
         </Field>
-        <Field label="Hire Comm (%)"><Input value="0.00" align="right" /></Field>
-        <Field label="DWF %"><Input value="7.00" align="right" /></Field>
-        <Field label="Spd Bal/Ldn (kn)">
+        <Field label="Hire Comm (%)" labelWidth="w-24"><Input value="0.00" align="right" /></Field>
+        <Field label="DWF %" labelWidth="w-24"><Input value="7.00" align="right" /></Field>
+        <Field label="Spd Bal/Ldn (kn)" labelWidth="w-24">
           <div className="flex gap-1">
             <Input value="12.00" align="right" />
             <Input value="11.50" align="right" />
           </div>
         </Field>
-        <Field label="Category"><Input /></Field>
-        <Field label="Commencing"><Input value="10/01/22 19:26" /></Field>
-        <Field label="Completing"><Input value="27/01/22 12:17" /></Field>
-        <Field label="Voyage Days"><Input value="16.6607" align="right" /></Field>
+        <Field label="Category" labelWidth="w-24"><Input /></Field>
+        <Field label="Commencing" labelWidth="w-24"><Input value="10/01/22 19:26" /></Field>
+        <Field label="Completing" labelWidth="w-24"><Input value="27/01/22 12:17" /></Field>
+        <Field label="Voyage Days" labelWidth="w-24"><Input value="16.6607" align="right" /></Field>
       </div>
 
       {/* Column 2 */}
-      <div className="col-span-3">
-        <Field label="Ballast Port" labelWidth="w-32"><Input value="DUMAI" /></Field>
-        <Field label="Reposition Port" labelWidth="w-32"><Input /></Field>
-        <Field label="Ballast Bonus" labelWidth="w-32"><Input value="0.00" align="right" /></Field>
-        <Field label="Opr Type" labelWidth="w-32"><Input value="TCOV" /></Field>
-        <Field label="Chtr Specialist" labelWidth="w-32"><Input disabled /></Field>
-        <Field label="Company" labelWidth="w-32"><Input value="VESON" /></Field>
-        <Field label="Trade Area" labelWidth="w-32"><Input /></Field>
-        <Field label="Piracy Routing" labelWidth="w-32"><Input value="Default" /></Field>
-        <Field label="ECA Routing" labelWidth="w-32">
+      <div className="min-w-0 flex-1">
+        <Field label="Ballast Port" labelWidth="w-28"><Input value="DUMAI" /></Field>
+        <Field label="Reposition Port" labelWidth="w-28"><Input /></Field>
+        <Field label="Ballast Bonus" labelWidth="w-28"><Input value="0.00" align="right" /></Field>
+        <Field label="Opr Type" labelWidth="w-28"><Input value="TCOV" /></Field>
+        <Field label="Chtr Specialist" labelWidth="w-28"><Input disabled /></Field>
+        <Field label="Company" labelWidth="w-28"><Input value="VESON" /></Field>
+        <Field label="Trade Area" labelWidth="w-28"><Input /></Field>
+        <Field label="Piracy Routing" labelWidth="w-28"><Input value="Default" /></Field>
+        <Field label="ECA Routing" labelWidth="w-28">
           <div className="flex gap-1">
             <Input value="Enabled" />
             <Input value="19 items selec" className="text-ve-accent" />
           </div>
         </Field>
-        <Field label="Load Line Routing" labelWidth="w-32"><Input value="Default" /></Field>
+        <Field label="Load Line Routing" labelWidth="w-28"><Input value="Default" /></Field>
       </div>
 
-      {/* Column 3: Bunker grid (editable) */}
-      <div className="col-span-6">
+      {/* Bunker grid (flush to P&L on the right) */}
+      <div className="shrink-0">
         <EditableTable
           storageKey="bunkers"
           title="Bunkers"
           initialColumns={bunkerColumns}
           initialRows={bunkerData}
+          titleRight={
+            <button
+              type="button"
+              onClick={() => setPlanOpen(true)}
+              className="ve-tool-btn ml-auto px-2 text-[12px] font-semibold text-ve-accent"
+            >
+              Bunker planning
+            </button>
+          }
         />
         <div className="mt-1 px-1 text-[12px]">
           <label className="inline-flex items-center gap-1">
@@ -225,6 +309,8 @@ function HeaderSection() {
           </label>
         </div>
       </div>
+
+      {planOpen && <BunkerPlanningModal onClose={() => setPlanOpen(false)} />}
     </div>
   );
 }
@@ -253,15 +339,36 @@ const cargoData: Row[] = [
 ];
 
 function CargoesSection() {
+  const [qtyTotal, setQtyTotal] = useState(() =>
+    cargoData.reduce((s, r) => s + (Number((r.qty ?? "").replace(/,/g, "")) || 0), 0),
+  );
+  const handleRows = useCallback((rows: Row[]) => {
+    setQtyTotal(rows.reduce((s, r) => s + (Number((r.qty ?? "").replace(/,/g, "")) || 0), 0));
+  }, []);
+
+  const cargoFooter: FooterRow[] = [
+    {
+      cells: {
+        group: { text: "Total" },
+        qty: { text: qtyTotal.toLocaleString("en-US") },
+      },
+    },
+  ];
+
   return (
     <div className="border-b border-ve-border bg-white">
-      <EditableTable
-        storageKey="cargoes"
-        title="Cargoes"
-        initialColumns={cargoColumns}
-        initialRows={cargoData}
-      />
-      <div className="px-3 py-1 text-right text-[12px] font-semibold">Total: 8,000</div>
+      <div className="overflow-x-auto">
+        <EditableTable
+          storageKey="cargoes"
+          title="Cargoes"
+          initialColumns={cargoColumns}
+          initialRows={cargoData}
+          footerRows={cargoFooter}
+          onRowsChange={handleRows}
+          resizable
+        />
+      </div>
+      <div className="h-4" />
     </div>
   );
 }
@@ -380,66 +487,73 @@ const pnlExpenses = [
   { l: "Misc. Expenses", v: "15,000.00" },
 ];
 
-function PnLRow({ label, value, bold, sub }: { label: string; value: string; bold?: boolean; sub?: boolean }) {
-  return (
-    <div className={`flex items-center justify-between border-b border-ve-border px-3 py-1 text-[12px] ${bold ? "font-semibold" : ""} ${sub ? "pl-6 text-ve-label" : ""}`}>
-      <span>{label}</span>
-      <span className="tabular-nums">{value}</span>
-    </div>
-  );
-}
+type PnLItem = {
+  label: string;
+  value: string;
+  kind?: "section" | "bold" | "sub";
+  node?: React.ReactNode;
+};
+
+const pnlItems: PnLItem[] = [
+  { label: "REVENUES", value: "", kind: "section" },
+  ...pnlRevenues.map((r) => ({ label: r.l, value: r.v, kind: "sub" as const })),
+  { label: "Total Revenues", value: "306,968.75", kind: "bold" },
+  { label: "EXPENSES", value: "", kind: "section" },
+  ...pnlExpenses.map((r) => ({ label: r.l, value: r.v, kind: "sub" as const })),
+  { label: "Total Expenses", value: "201,172.85", kind: "bold" },
+  { label: "Voyage Result:", value: "105,795.90", kind: "bold" },
+  { label: "Net Daily TCE:", value: "6,350.01", kind: "bold", node: <input type="checkbox" className="h-3 w-3" /> },
+  { label: "RUNNING COST", value: "", kind: "section" },
+  { label: "Total Running Cost", value: "" },
+  { label: "Profit (Loss)", value: "105,795.9", kind: "bold" },
+  { label: "Net Voyage Days", value: "16.66", kind: "bold" },
+  { label: "Daily Profit (Loss)", value: "6,350.01", kind: "bold" },
+  { label: "Total/Off hire days", value: "16.66" },
+  { label: "Port/sea days", value: "16.66" },
+  { label: "Breakeven", value: "18.64", kind: "bold" },
+  { label: "Per Unit Cost", value: "17.80", kind: "bold" },
+  { label: "Freight Rate (USD/t)", value: "28.5044", kind: "bold" },
+  { label: "Deviation TCE", value: "", kind: "bold", node: <input type="checkbox" className="h-3 w-3" /> },
+  { label: "CO2 Cost", value: "" },
+  { label: "CO2 Adjusted Profit (Loss)", value: "105,795.90", kind: "bold" },
+];
 
 function PnLPanel() {
+  let dataIdx = -1;
   return (
-    <aside className="flex w-[360px] shrink-0 flex-col border-l border-ve-border bg-white">
-      <div className="border-b border-ve-border bg-ve-sectionBg px-3 py-1 text-[13px] font-semibold">P&amp;L</div>
+    <aside className="flex w-[270px] shrink-0 flex-col border-l border-ve-border bg-white">
+      <div className="border-b border-ve-border bg-ve-sectionBg px-2 py-1 text-[13px] font-semibold">
+        P&amp;L
+      </div>
       <div className="flex border-b border-ve-border text-[12px]">
-        <button className="flex-1 border-b-2 border-b-ve-accent bg-white px-3 py-1.5 font-semibold">All Periods</button>
-        <button className="flex-1 px-3 py-1.5 text-ve-label hover:text-ve-text">Estimated</button>
+        <button className="flex-1 border-b-2 border-b-ve-accent bg-white px-2 py-1.5 font-semibold">
+          All Periods
+        </button>
+        <button className="flex-1 px-2 py-1.5 text-ve-label hover:text-ve-text">Estimated</button>
       </div>
 
-      <PnLRow label="REVENUES" value="" bold />
-      {pnlRevenues.map((r) => <PnLRow key={r.l} label={r.l} value={r.v} sub />)}
-      <PnLRow label="Total Revenues" value="306,968.75" bold />
+      {pnlItems.map((it) => {
+        const isSection = it.kind === "section";
+        if (!isSection) dataIdx += 1;
+        const bg = isSection ? "bg-ve-sectionBg" : dataIdx % 2 === 0 ? "bg-white" : "bg-ve-altRow";
+        return (
+          <div
+            key={it.label}
+            className={`flex items-center justify-between gap-1 border-b border-ve-border px-2 py-1 text-[12px] ${bg} ${it.kind === "bold" || isSection ? "font-semibold" : ""} ${it.kind === "sub" ? "pl-4 text-ve-label" : ""}`}
+          >
+            <span className="flex items-center gap-1 truncate">
+              {it.node}
+              {it.label}
+            </span>
+            <span className="shrink-0 tabular-nums">{it.value}</span>
+          </div>
+        );
+      })}
 
-      <PnLRow label="EXPENSES" value="" bold />
-      {pnlExpenses.map((r) => <PnLRow key={r.l} label={r.l} value={r.v} sub />)}
-      <PnLRow label="Total Expenses" value="201,172.85" bold />
-
-      <div className="flex items-center justify-between border-b border-ve-border px-3 py-1.5 text-[12px]">
-        <span>Voyage Result:</span>
-        <span className="font-semibold tabular-nums">105,795.90</span>
-      </div>
-      <div className="flex items-center justify-between border-b border-ve-border px-3 py-1.5 text-[12px]">
-        <span className="flex items-center gap-2">
-          <input type="checkbox" className="h-3 w-3" /> Net Daily TCE:
-        </span>
-        <span className="font-semibold tabular-nums">6,350.01</span>
-      </div>
-
-      <PnLRow label="RUNNING COST" value="" bold />
-      <PnLRow label="Total Running Cost" value="" />
-
-      <PnLRow label="Profit (Loss)" value="105,795.9" bold />
-      <PnLRow label="Net Voyage Days" value="16.66" bold />
-      <PnLRow label="Daily Profit (Loss)" value="6,350.01" bold />
-      <PnLRow label="Total/Off hire days" value="16.66" />
-      <PnLRow label="Port/sea days" value="16.66" />
-      <PnLRow label="Breakeven" value="18.64" bold />
-      <PnLRow label="Per Unit Cost" value="17.80" bold />
-      <PnLRow label="Freight Rate (USD/t)" value="28.5044" bold />
-
-      <div className="flex items-center justify-between border-b border-ve-border px-3 py-1 text-[12px]">
-        <span className="font-semibold">Deviation TCE</span>
-        <input type="checkbox" className="h-3 w-3" />
-      </div>
-      <PnLRow label="CO2 Cost" value="" />
-      <PnLRow label="CO2 Adjusted Profit (Loss)" value="105,795.90" bold />
-
-      <div className="border-b border-ve-border bg-ve-sectionBg px-3 py-1 text-[12px] font-semibold tracking-widest">
+      <div className="border-b border-ve-border bg-ve-sectionBg px-2 py-1 text-[12px] font-semibold tracking-widest">
         ESTIMATE REMARKS
       </div>
-      <textarea className="min-h-[140px] flex-1 resize-none border-0 p-3 text-[12px] outline-none" />
+      <textarea className="min-h-[140px] flex-1 resize-none border-0 p-2 text-[12px] outline-none" />
     </aside>
   );
 }

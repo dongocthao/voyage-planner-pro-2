@@ -72,6 +72,7 @@
   --color-ve-rowHover: var(--ve-row-hover);
   --color-ve-disabled: var(--ve-disabled);
   --color-ve-totalBg: var(--ve-total-bg);
+  --color-ve-altRow: var(--ve-alt-row);
 }
 
 @layer components {
@@ -134,6 +135,7 @@
   --ve-row-hover: oklch(0.965 0.012 240);
   --ve-disabled: oklch(0.92 0.008 247);
   --ve-total-bg: oklch(0.96 0.006 247);
+  --ve-alt-row: oklch(0.965 0.035 150);
 }
 
 .dark {
