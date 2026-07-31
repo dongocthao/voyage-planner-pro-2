@@ -10,6 +10,7 @@ import {
   RefreshCw,
   AlertTriangle,
   Globe,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 import EditableTable, {
