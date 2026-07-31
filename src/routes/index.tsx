@@ -53,9 +53,9 @@ function Field({
   labelWidth?: string;
 }) {
   return (
-    <div className="flex items-center gap-2 py-[3px]">
+    <div className="flex items-center gap-1.5 py-[1px]">
       <label className={`${labelWidth} shrink-0 text-[12px] text-ve-label`}>{label}</label>
-      <div className="flex-1">{children}</div>
+      <div className="min-w-0 flex-1">{children}</div>
     </div>
   );
 }
