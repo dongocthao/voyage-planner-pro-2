@@ -12,7 +12,7 @@ import {
   Globe,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import EditableTable, {
   type Column,
   type Row,
