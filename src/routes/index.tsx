@@ -10,6 +10,7 @@ import {
   RefreshCw,
   AlertTriangle,
   Globe,
+  Minus,
   X,
 } from "lucide-react";
 import { useCallback, useState } from "react";
