@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VoyageCharterEstimationRouteImport } from './routes/voyage-charter-estimation'
+import { Route as TimeCharterOutFixtureRouteImport } from './routes/time-charter-out-fixture'
 import { Route as TimeCharterOutRouteImport } from './routes/time-charter-out'
 import { Route as IndexRouteImport } from './routes/index'
 
 const VoyageCharterEstimationRoute = VoyageCharterEstimationRouteImport.update({
   id: '/voyage-charter-estimation',
   path: '/voyage-charter-estimation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TimeCharterOutFixtureRoute = TimeCharterOutFixtureRouteImport.update({
+  id: '/time-charter-out-fixture',
+  path: '/time-charter-out-fixture',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TimeCharterOutRoute = TimeCharterOutRouteImport.update({
@@ -32,30 +38,47 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/time-charter-out': typeof TimeCharterOutRoute
+  '/time-charter-out-fixture': typeof TimeCharterOutFixtureRoute
   '/voyage-charter-estimation': typeof VoyageCharterEstimationRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/time-charter-out': typeof TimeCharterOutRoute
+  '/time-charter-out-fixture': typeof TimeCharterOutFixtureRoute
   '/voyage-charter-estimation': typeof VoyageCharterEstimationRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/time-charter-out': typeof TimeCharterOutRoute
+  '/time-charter-out-fixture': typeof TimeCharterOutFixtureRoute
   '/voyage-charter-estimation': typeof VoyageCharterEstimationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/time-charter-out' | '/voyage-charter-estimation'
+  fullPaths:
+    | '/'
+    | '/time-charter-out'
+    | '/time-charter-out-fixture'
+    | '/voyage-charter-estimation'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/time-charter-out' | '/voyage-charter-estimation'
-  id: '__root__' | '/' | '/time-charter-out' | '/voyage-charter-estimation'
+  to:
+    | '/'
+    | '/time-charter-out'
+    | '/time-charter-out-fixture'
+    | '/voyage-charter-estimation'
+  id:
+    | '__root__'
+    | '/'
+    | '/time-charter-out'
+    | '/time-charter-out-fixture'
+    | '/voyage-charter-estimation'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   TimeCharterOutRoute: typeof TimeCharterOutRoute
+  TimeCharterOutFixtureRoute: typeof TimeCharterOutFixtureRoute
   VoyageCharterEstimationRoute: typeof VoyageCharterEstimationRoute
 }
 
@@ -66,6 +89,13 @@ declare module '@tanstack/react-router' {
       path: '/voyage-charter-estimation'
       fullPath: '/voyage-charter-estimation'
       preLoaderRoute: typeof VoyageCharterEstimationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/time-charter-out-fixture': {
+      id: '/time-charter-out-fixture'
+      path: '/time-charter-out-fixture'
+      fullPath: '/time-charter-out-fixture'
+      preLoaderRoute: typeof TimeCharterOutFixtureRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/time-charter-out': {
@@ -88,8 +118,19 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   TimeCharterOutRoute: TimeCharterOutRoute,
+  TimeCharterOutFixtureRoute: TimeCharterOutFixtureRoute,
   VoyageCharterEstimationRoute: VoyageCharterEstimationRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
