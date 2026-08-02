@@ -75,11 +75,27 @@ function Input({
   return (
     <input
       defaultValue={value}
-      disabled={disabled}
-      className={`h-[22px] w-full border border-ve-border bg-white px-1.5 text-[12px] text-ve-text outline-none focus:border-ve-accent focus:ring-1 focus:ring-ve-accent/40 disabled:bg-ve-disabled ${align === "right" ? "text-right" : ""} ${className}`}
+      className={`h-[22px] w-full border border-ve-border px-1.5 text-[12px] text-ve-text outline-none focus:border-ve-accent focus:ring-1 focus:ring-ve-accent/40 ${disabled ? "bg-ve-disabled" : "bg-white"} ${align === "right" ? "text-right" : ""} ${className}`}
     />
   );
 }
+
+/* Bare cell input used inside mini grids */
+function CellInput({
+  value = "",
+  align = "left",
+}: {
+  value?: string;
+  align?: "left" | "right";
+}) {
+  return (
+    <input
+      defaultValue={value}
+      className={`h-[20px] w-full min-w-0 bg-transparent px-1.5 text-[12px] tabular-nums text-ve-text outline-none focus:bg-white focus:ring-1 focus:ring-ve-accent/40 ${align === "right" ? "text-right" : ""}`}
+    />
+  );
+}
+
 
 function Select({ value = "" }: { value?: string }) {
   return (
