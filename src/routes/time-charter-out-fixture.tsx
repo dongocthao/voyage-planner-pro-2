@@ -401,16 +401,20 @@ function TcoFixture() {
           <div className="min-w-0 flex-1">
             {/* Header fields */}
             <div className="flex gap-3 px-2 pt-2">
-              <div className="min-w-0 flex-[0.72]">
+              <div className="min-w-0 flex-1">
                 <Field label="Vessel"><Select /></Field>
-                <Field label="TC Code"><Input disabled /></Field>
+                <Field label="TC Code"><Input /></Field>
                 <Field label="Charterer"><Input /></Field>
                 <Field label="Bill Via"><Input /></Field>
                 <Field label="Laycan From" checkbox><Input /></Field>
                 <Field label="Laycan To"><Input /></Field>
+                <Field label="Contract Type"><Input /></Field>
+                <Field label="Ops Coordinator"><Input /></Field>
+                <Field label="Chtr Specialist"><Input /></Field>
+                <Field label="Conf Date GMT"><Input /></Field>
               </div>
 
-              <div className="min-w-0 flex-[0.78]">
+              <div className="min-w-0 flex-1">
                 <Field label="Date/Fixed By">
                   <div className="flex gap-1">
                     <Input />
@@ -427,14 +431,9 @@ function TcoFixture() {
                     <Input />
                   </div>
                 </Field>
-                <Field label="Contract Type"><Input /></Field>
-                <Field label="Ops Coordinator"><Input /></Field>
-                <Field label="Chtr Specialist"><Input /></Field>
-                <Field label="Conf Date GMT"><Input disabled /></Field>
               </div>
 
-              <div className="min-w-0 flex-[1.5]">
-
+              <div className="min-w-0 flex-1">
                 <Field label="Status" labelWidth="w-40"><Input value="OPPORTUNITY" /></Field>
                 <Field label="Billing Period" labelWidth="w-40"><Input /></Field>
                 <Field label="Billing Schedule" labelWidth="w-40"><Input value="IN ADVANCE" /></Field>
@@ -450,11 +449,18 @@ function TcoFixture() {
                   </div>
                 </Field>
                 <Field label="Ref Contract" labelWidth="w-40"><Input /></Field>
-                <DurationGrid />
               </div>
             </div>
 
-            <DeliveryGrid />
+            {/* Duration + Delivery grids: span center + right blocks */}
+            <div className="flex gap-3 px-2 pt-2">
+              <div className="min-w-0 flex-1" />
+              <div className="min-w-0 flex-[2] pl-[134px]">
+                <DurationGrid />
+                <DeliveryGrid />
+              </div>
+            </div>
+
             <TabsSection />
           </div>
 
