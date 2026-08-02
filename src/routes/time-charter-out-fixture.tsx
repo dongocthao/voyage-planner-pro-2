@@ -223,31 +223,26 @@ function DeliveryGrid() {
               key={r}
               className="relative grid grid-cols-[220px_130px_130px_140px_1fr] border-t border-ve-border"
             >
-              <span className="absolute -left-[80px] top-[3px] w-[74px] text-right text-[12px] text-ve-label">
+              <span className="absolute -left-[80px] top-[2px] w-[74px] text-right text-[12px] text-ve-label">
                 {r}
               </span>
-              <div className="border-r border-ve-border py-[2px]">&nbsp;</div>
-              <div className="border-r border-ve-border py-[2px]">&nbsp;</div>
-              <div className="border-r border-ve-border py-[2px]">&nbsp;</div>
-              <div className="border-r border-ve-border px-1.5 py-[2px] text-right text-[12px] tabular-nums">
-                0.00
-              </div>
-              <div className="py-[2px]">&nbsp;</div>
+              <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+              <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+              <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+              <div className="min-w-0 border-r border-ve-border"><CellInput value="0.00" align="right" /></div>
+              <div className="min-w-0"><CellInput /></div>
             </div>
           ))}
           <div className="relative grid grid-cols-[220px_130px_130px_140px_1fr] border-t border-ve-border">
-            <span className="absolute -left-[180px] top-[3px] w-[174px] text-right text-[12px] text-ve-label">
+            <span className="absolute -left-[180px] top-[2px] w-[174px] text-right text-[12px] text-ve-label">
               Duration/Basis (days)
             </span>
-            <div className="border-r border-ve-border px-1.5 py-[2px] text-right text-[12px] tabular-nums">
-              0.0000
-            </div>
-            <div className="border-r border-ve-border px-1.5 py-[2px] text-right text-[12px] tabular-nums">
-              0.0000
-            </div>
-            <div className="border-r border-ve-border px-1.5 py-[2px] text-[12px]">Min</div>
-            <div className="border-r border-ve-border py-[2px]">&nbsp;</div>
-            <div className="py-[2px]">&nbsp;</div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput value="0.0000" align="right" /></div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput value="0.0000" align="right" /></div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput value="Min" /></div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+            <div className="min-w-0"><CellInput /></div>
+
           </div>
         </div>
       </div>
