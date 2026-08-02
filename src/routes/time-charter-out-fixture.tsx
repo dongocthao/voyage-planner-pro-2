@@ -406,8 +406,8 @@ function TcoFixture() {
         <div className="flex">
           <div className="min-w-0 flex-1">
             {/* Header fields */}
-            <div className="flex gap-4 px-2 pt-2">
-              <div className="min-w-0 flex-1">
+            <div className="flex gap-3 px-2 pt-2">
+              <div className="min-w-0 flex-[0.72]">
                 <Field label="Vessel"><Select /></Field>
                 <Field label="TC Code"><Input disabled /></Field>
                 <Field label="Charterer"><Input /></Field>
@@ -416,7 +416,7 @@ function TcoFixture() {
                 <Field label="Laycan To"><Input /></Field>
               </div>
 
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0 flex-[0.78]">
                 <Field label="Date/Fixed By">
                   <div className="flex gap-1">
                     <Input />
@@ -439,7 +439,8 @@ function TcoFixture() {
                 <Field label="Conf Date GMT"><Input disabled /></Field>
               </div>
 
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0 flex-[1.5]">
+
                 <Field label="Status" labelWidth="w-40"><Input value="OPPORTUNITY" /></Field>
                 <Field label="Billing Period" labelWidth="w-40"><Input /></Field>
                 <Field label="Billing Schedule" labelWidth="w-40"><Input value="IN ADVANCE" /></Field>
