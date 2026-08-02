@@ -167,44 +167,43 @@ function Toolbar() {
 
 /* ---------- Duration Min/Max mini grid ---------- */
 
+const DUR_COLS = "grid-cols-[0.85fr_0.85fr_0.7fr_0.7fr_minmax(0,1.6fr)]";
+
 function DurationGrid() {
   const heads = ["Dur.", "Unit", "-Days", "+Days", "E/L Redel."];
-  const cols = "grid-cols-[0.85fr_0.85fr_0.7fr_0.7fr_minmax(0,1.6fr)]";
   return (
-    <div className="mt-1 flex">
-      <div className="w-[40px] shrink-0" />
-      <div className="min-w-0 flex-1 border border-ve-border">
-        <div className={`grid ${cols} bg-ve-sectionBg text-[12px] font-medium text-ve-text`}>
-          {heads.map((h) => (
-            <div key={h} className="min-w-0 truncate border-r border-ve-border px-1.5 py-[2px] last:border-r-0">
-              {h}
-            </div>
-          ))}
-        </div>
-        {(["Min", "Max"] as const).map((r) => (
-          <div key={r} className={`relative grid ${cols} border-t border-ve-border`}>
-            <span className="absolute -left-[36px] top-[2px] text-[12px] text-ve-label">{r}</span>
-            <div className="min-w-0 border-r border-ve-border">
-              <CellInput value="0" align="right" />
-            </div>
-            <div className="min-w-0 border-r border-ve-border">
-              <CellInput />
-            </div>
-            <div className="min-w-0 border-r border-ve-border">
-              <CellInput align="right" />
-            </div>
-            <div className="min-w-0 border-r border-ve-border">
-              <CellInput align="right" />
-            </div>
-            <div className="min-w-0">
-              <CellInput />
-            </div>
+    <div className="border border-ve-border">
+      <div className={`grid ${DUR_COLS} bg-ve-sectionBg text-[12px] font-medium text-ve-text`}>
+        {heads.map((h) => (
+          <div key={h} className="min-w-0 truncate border-r border-ve-border px-1.5 py-[2px] last:border-r-0">
+            {h}
           </div>
         ))}
       </div>
+      {(["Min", "Max"] as const).map((r) => (
+        <div key={r} className={`relative grid ${DUR_COLS} border-t border-ve-border`}>
+          <span className="absolute -left-[34px] top-[2px] text-[12px] text-ve-label">{r}</span>
+          <div className="min-w-0 border-r border-ve-border">
+            <CellInput value="0" align="right" />
+          </div>
+          <div className="min-w-0 border-r border-ve-border">
+            <CellInput />
+          </div>
+          <div className="min-w-0 border-r border-ve-border">
+            <CellInput align="right" />
+          </div>
+          <div className="min-w-0 border-r border-ve-border">
+            <CellInput align="right" />
+          </div>
+          <div className="min-w-0">
+            <CellInput />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
+
 
 
 /* ---------- Delivery / Redelivery ---------- */
