@@ -49,9 +49,12 @@ function Field({
   checkbox?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-1.5 py-[1px]">
+    <div className="relative flex items-center gap-1.5 py-[1px]">
       {checkbox ? (
-        <input type="checkbox" className="h-3 w-3 shrink-0" />
+        <input
+          type="checkbox"
+          className="absolute left-0 top-1/2 h-3 w-3 -translate-y-1/2"
+        />
       ) : null}
       <label className={`${labelWidth} shrink-0 text-right text-[12px] text-ve-label`}>
         {label}
@@ -60,6 +63,7 @@ function Field({
     </div>
   );
 }
+
 
 function Input({
   value = "",
@@ -163,93 +167,93 @@ function Toolbar() {
 
 /* ---------- Duration Min/Max mini grid ---------- */
 
+const DUR_COLS = "grid-cols-[0.85fr_0.85fr_0.7fr_0.7fr_minmax(0,1.6fr)]";
+
 function DurationGrid() {
   const heads = ["Dur.", "Unit", "-Days", "+Days", "E/L Redel."];
-  const cols = "grid-cols-[0.85fr_0.85fr_0.7fr_0.7fr_minmax(0,1.6fr)]";
   return (
-    <div className="mt-1 flex">
-      <div className="w-[40px] shrink-0" />
-      <div className="min-w-0 flex-1 border border-ve-border">
-        <div className={`grid ${cols} bg-ve-sectionBg text-[12px] font-medium text-ve-text`}>
-          {heads.map((h) => (
-            <div key={h} className="min-w-0 truncate border-r border-ve-border px-1.5 py-[2px] last:border-r-0">
-              {h}
-            </div>
-          ))}
-        </div>
-        {(["Min", "Max"] as const).map((r) => (
-          <div key={r} className={`relative grid ${cols} border-t border-ve-border`}>
-            <span className="absolute -left-[36px] top-[2px] text-[12px] text-ve-label">{r}</span>
-            <div className="min-w-0 border-r border-ve-border">
-              <CellInput value="0" align="right" />
-            </div>
-            <div className="min-w-0 border-r border-ve-border">
-              <CellInput />
-            </div>
-            <div className="min-w-0 border-r border-ve-border">
-              <CellInput align="right" />
-            </div>
-            <div className="min-w-0 border-r border-ve-border">
-              <CellInput align="right" />
-            </div>
-            <div className="min-w-0">
-              <CellInput />
-            </div>
+    <div className="border border-ve-border">
+      <div className={`grid ${DUR_COLS} bg-ve-sectionBg text-[12px] font-medium text-ve-text`}>
+        {heads.map((h) => (
+          <div key={h} className="min-w-0 truncate border-r border-ve-border px-1.5 py-[2px] last:border-r-0">
+            {h}
           </div>
         ))}
       </div>
+      {(["Min", "Max"] as const).map((r) => (
+        <div key={r} className={`relative grid ${DUR_COLS} border-t border-ve-border`}>
+          <span className="absolute -left-[34px] top-[2px] text-[12px] text-ve-label">{r}</span>
+          <div className="min-w-0 border-r border-ve-border">
+            <CellInput value="0" align="right" />
+          </div>
+          <div className="min-w-0 border-r border-ve-border">
+            <CellInput />
+          </div>
+          <div className="min-w-0 border-r border-ve-border">
+            <CellInput align="right" />
+          </div>
+          <div className="min-w-0 border-r border-ve-border">
+            <CellInput align="right" />
+          </div>
+          <div className="min-w-0">
+            <CellInput />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
 
 
+
 /* ---------- Delivery / Redelivery ---------- */
+
+const DEL_COLS = "grid-cols-[1.5fr_1fr_1fr_1fr_minmax(0,1.5fr)]";
 
 function DeliveryGrid() {
   return (
-    <div className="px-2 pt-2">
-      <div className="flex">
-        <div className="w-[190px] shrink-0" />
-        <div className="min-w-0 flex-1 border border-ve-border">
-          <div className="grid grid-cols-[220px_130px_130px_140px_1fr] bg-ve-sectionBg text-[12px] font-medium">
-            {["Port", "Est GMT", "Proj/Act GMT", "Difference", "Remarks"].map((h) => (
-              <div key={h} className="border-r border-ve-border px-1.5 py-[2px] last:border-r-0">
-                {h}
-              </div>
-            ))}
-          </div>
-          {(["Delivery", "Redelivery"] as const).map((r) => (
+    <div className="mt-2">
+      <div className="border border-ve-border">
+        <div className={`grid ${DEL_COLS} bg-ve-sectionBg text-[12px] font-medium`}>
+          {["Port", "Est GMT", "Proj/Act GMT", "Difference", "Remarks"].map((h) => (
             <div
-              key={r}
-              className="relative grid grid-cols-[220px_130px_130px_140px_1fr] border-t border-ve-border"
+              key={h}
+              className="min-w-0 truncate border-r border-ve-border px-1.5 py-[2px] last:border-r-0"
             >
-              <span className="absolute -left-[80px] top-[2px] w-[74px] text-right text-[12px] text-ve-label">
-                {r}
-              </span>
-              <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
-              <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
-              <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
-              <div className="min-w-0 border-r border-ve-border"><CellInput value="0.00" align="right" /></div>
-              <div className="min-w-0"><CellInput /></div>
+              {h}
             </div>
           ))}
-          <div className="relative grid grid-cols-[220px_130px_130px_140px_1fr] border-t border-ve-border">
-            <span className="absolute -left-[180px] top-[2px] w-[174px] text-right text-[12px] text-ve-label">
-              Duration/Basis (days)
+        </div>
+        {(["Delivery", "Redelivery"] as const).map((r) => (
+          <div key={r} className={`relative grid ${DEL_COLS} border-t border-ve-border`}>
+            <span className="absolute -left-[80px] top-[2px] w-[74px] text-right text-[12px] text-ve-label">
+              {r}
             </span>
-            <div className="min-w-0 border-r border-ve-border"><CellInput value="0.0000" align="right" /></div>
-            <div className="min-w-0 border-r border-ve-border"><CellInput value="0.0000" align="right" /></div>
-            <div className="min-w-0 border-r border-ve-border"><CellInput value="Min" /></div>
             <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput value="0.00" align="right" /></div>
             <div className="min-w-0"><CellInput /></div>
-
           </div>
+        ))}
+        <div className={`relative grid ${DEL_COLS} border-t border-ve-border`}>
+          <span className="absolute -left-[180px] top-[2px] w-[174px] text-right text-[12px] text-ve-label">
+            Duration/Basis (days)
+          </span>
+          <div className="min-w-0 border-r border-ve-border" />
+          <div className="min-w-0 border-r border-ve-border"><CellInput value="0.0000" align="right" /></div>
+          <div className="min-w-0 border-r border-ve-border"><CellInput value="0.0000" align="right" /></div>
+          <div className="min-w-0 border-r border-ve-border"><CellInput value="Min" /></div>
+          <div className="min-w-0" />
         </div>
       </div>
 
-      <div className="mt-1 flex items-start gap-6 pl-[190px]">
+      <div className="mt-1 flex flex-wrap items-center gap-6">
         <label className="inline-flex items-center gap-1 text-[12px]">
           <input type="checkbox" className="h-3 w-3" /> Use Local Time
+        </label>
+        <label className="inline-flex items-center gap-1 text-[12px]">
+          <input type="checkbox" className="h-3 w-3" /> Add All Off Hires
         </label>
         <div className="ml-auto flex flex-col gap-1">
           <div className="flex items-center gap-4">
@@ -258,26 +262,21 @@ function DeliveryGrid() {
             </label>
             <span className="text-[12px] text-ve-label">IC Company</span>
             <div className="w-[190px]">
-              <Input disabled />
+              <Input />
             </div>
           </div>
           <div className="flex items-center justify-end gap-4">
             <span className="text-[12px] text-ve-label">IC Adj %</span>
             <div className="w-[190px]">
-              <Input disabled />
+              <Input />
             </div>
           </div>
         </div>
       </div>
-
-      <div className="mt-1 flex justify-center">
-        <label className="inline-flex items-center gap-1 text-[12px]">
-          <input type="checkbox" className="h-3 w-3" /> Add All Off Hires
-        </label>
-      </div>
     </div>
   );
 }
+
 
 /* ---------- Tabs + grids ---------- */
 
@@ -402,16 +401,20 @@ function TcoFixture() {
           <div className="min-w-0 flex-1">
             {/* Header fields */}
             <div className="flex gap-3 px-2 pt-2">
-              <div className="min-w-0 flex-[0.72]">
+              <div className="min-w-0 flex-1">
                 <Field label="Vessel"><Select /></Field>
-                <Field label="TC Code"><Input disabled /></Field>
+                <Field label="TC Code"><Input /></Field>
                 <Field label="Charterer"><Input /></Field>
                 <Field label="Bill Via"><Input /></Field>
                 <Field label="Laycan From" checkbox><Input /></Field>
                 <Field label="Laycan To"><Input /></Field>
+                <Field label="Contract Type"><Input /></Field>
+                <Field label="Ops Coordinator"><Input /></Field>
+                <Field label="Chtr Specialist"><Input /></Field>
+                <Field label="Conf Date GMT"><Input /></Field>
               </div>
 
-              <div className="min-w-0 flex-[0.78]">
+              <div className="min-w-0 flex-1">
                 <Field label="Date/Fixed By">
                   <div className="flex gap-1">
                     <Input />
@@ -428,14 +431,9 @@ function TcoFixture() {
                     <Input />
                   </div>
                 </Field>
-                <Field label="Contract Type"><Input /></Field>
-                <Field label="Ops Coordinator"><Input /></Field>
-                <Field label="Chtr Specialist"><Input /></Field>
-                <Field label="Conf Date GMT"><Input disabled /></Field>
               </div>
 
-              <div className="min-w-0 flex-[1.5]">
-
+              <div className="min-w-0 flex-1">
                 <Field label="Status" labelWidth="w-40"><Input value="OPPORTUNITY" /></Field>
                 <Field label="Billing Period" labelWidth="w-40"><Input /></Field>
                 <Field label="Billing Schedule" labelWidth="w-40"><Input value="IN ADVANCE" /></Field>
@@ -451,11 +449,18 @@ function TcoFixture() {
                   </div>
                 </Field>
                 <Field label="Ref Contract" labelWidth="w-40"><Input /></Field>
-                <DurationGrid />
               </div>
             </div>
 
-            <DeliveryGrid />
+            {/* Duration + Delivery grids: span center + right blocks */}
+            <div className="flex gap-3 px-2 pt-2">
+              <div className="min-w-0 flex-1" />
+              <div className="min-w-0 flex-[2] pl-[134px]">
+                <DurationGrid />
+                <DeliveryGrid />
+              </div>
+            </div>
+
             <TabsSection />
           </div>
 
