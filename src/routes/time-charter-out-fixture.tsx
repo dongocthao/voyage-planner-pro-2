@@ -49,9 +49,12 @@ function Field({
   checkbox?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-1.5 py-[1px]">
+    <div className="relative flex items-center gap-1.5 py-[1px]">
       {checkbox ? (
-        <input type="checkbox" className="h-3 w-3 shrink-0" />
+        <input
+          type="checkbox"
+          className="absolute left-0 top-1/2 h-3 w-3 -translate-y-1/2"
+        />
       ) : null}
       <label className={`${labelWidth} shrink-0 text-right text-[12px] text-ve-label`}>
         {label}
@@ -60,6 +63,7 @@ function Field({
     </div>
   );
 }
+
 
 function Input({
   value = "",
