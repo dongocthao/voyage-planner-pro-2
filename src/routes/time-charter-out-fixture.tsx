@@ -208,51 +208,52 @@ function DurationGrid() {
 
 /* ---------- Delivery / Redelivery ---------- */
 
+const DEL_COLS = "grid-cols-[1.5fr_1fr_1fr_1fr_minmax(0,1.5fr)]";
+
 function DeliveryGrid() {
   return (
-    <div className="px-2 pt-2">
-      <div className="flex">
-        <div className="w-[190px] shrink-0" />
-        <div className="min-w-0 flex-1 border border-ve-border">
-          <div className="grid grid-cols-[220px_130px_130px_140px_1fr] bg-ve-sectionBg text-[12px] font-medium">
-            {["Port", "Est GMT", "Proj/Act GMT", "Difference", "Remarks"].map((h) => (
-              <div key={h} className="border-r border-ve-border px-1.5 py-[2px] last:border-r-0">
-                {h}
-              </div>
-            ))}
-          </div>
-          {(["Delivery", "Redelivery"] as const).map((r) => (
+    <div className="mt-2">
+      <div className="border border-ve-border">
+        <div className={`grid ${DEL_COLS} bg-ve-sectionBg text-[12px] font-medium`}>
+          {["Port", "Est GMT", "Proj/Act GMT", "Difference", "Remarks"].map((h) => (
             <div
-              key={r}
-              className="relative grid grid-cols-[220px_130px_130px_140px_1fr] border-t border-ve-border"
+              key={h}
+              className="min-w-0 truncate border-r border-ve-border px-1.5 py-[2px] last:border-r-0"
             >
-              <span className="absolute -left-[80px] top-[2px] w-[74px] text-right text-[12px] text-ve-label">
-                {r}
-              </span>
-              <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
-              <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
-              <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
-              <div className="min-w-0 border-r border-ve-border"><CellInput value="0.00" align="right" /></div>
-              <div className="min-w-0"><CellInput /></div>
+              {h}
             </div>
           ))}
-          <div className="relative grid grid-cols-[220px_130px_130px_140px_1fr] border-t border-ve-border">
-            <span className="absolute -left-[180px] top-[2px] w-[174px] text-right text-[12px] text-ve-label">
-              Duration/Basis (days)
+        </div>
+        {(["Delivery", "Redelivery"] as const).map((r) => (
+          <div key={r} className={`relative grid ${DEL_COLS} border-t border-ve-border`}>
+            <span className="absolute -left-[80px] top-[2px] w-[74px] text-right text-[12px] text-ve-label">
+              {r}
             </span>
-            <div className="min-w-0 border-r border-ve-border"><CellInput value="0.0000" align="right" /></div>
-            <div className="min-w-0 border-r border-ve-border"><CellInput value="0.0000" align="right" /></div>
-            <div className="min-w-0 border-r border-ve-border"><CellInput value="Min" /></div>
             <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput value="0.00" align="right" /></div>
             <div className="min-w-0"><CellInput /></div>
-
           </div>
+        ))}
+        <div className={`relative grid ${DEL_COLS} border-t border-ve-border`}>
+          <span className="absolute -left-[180px] top-[2px] w-[174px] text-right text-[12px] text-ve-label">
+            Duration/Basis (days)
+          </span>
+          <div className="min-w-0 border-r border-ve-border" />
+          <div className="min-w-0 border-r border-ve-border"><CellInput value="0.0000" align="right" /></div>
+          <div className="min-w-0 border-r border-ve-border"><CellInput value="0.0000" align="right" /></div>
+          <div className="min-w-0 border-r border-ve-border"><CellInput value="Min" /></div>
+          <div className="min-w-0" />
         </div>
       </div>
 
-      <div className="mt-1 flex items-start gap-6 pl-[190px]">
+      <div className="mt-1 flex flex-wrap items-center gap-6">
         <label className="inline-flex items-center gap-1 text-[12px]">
           <input type="checkbox" className="h-3 w-3" /> Use Local Time
+        </label>
+        <label className="inline-flex items-center gap-1 text-[12px]">
+          <input type="checkbox" className="h-3 w-3" /> Add All Off Hires
         </label>
         <div className="ml-auto flex flex-col gap-1">
           <div className="flex items-center gap-4">
@@ -261,26 +262,21 @@ function DeliveryGrid() {
             </label>
             <span className="text-[12px] text-ve-label">IC Company</span>
             <div className="w-[190px]">
-              <Input disabled />
+              <Input />
             </div>
           </div>
           <div className="flex items-center justify-end gap-4">
             <span className="text-[12px] text-ve-label">IC Adj %</span>
             <div className="w-[190px]">
-              <Input disabled />
+              <Input />
             </div>
           </div>
         </div>
       </div>
-
-      <div className="mt-1 flex justify-center">
-        <label className="inline-flex items-center gap-1 text-[12px]">
-          <input type="checkbox" className="h-3 w-3" /> Add All Off Hires
-        </label>
-      </div>
     </div>
   );
 }
+
 
 /* ---------- Tabs + grids ---------- */
 
