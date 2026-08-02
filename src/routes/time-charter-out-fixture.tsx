@@ -75,11 +75,27 @@ function Input({
   return (
     <input
       defaultValue={value}
-      disabled={disabled}
-      className={`h-[22px] w-full border border-ve-border bg-white px-1.5 text-[12px] text-ve-text outline-none focus:border-ve-accent focus:ring-1 focus:ring-ve-accent/40 disabled:bg-ve-disabled ${align === "right" ? "text-right" : ""} ${className}`}
+      className={`h-[22px] w-full border border-ve-border px-1.5 text-[12px] text-ve-text outline-none focus:border-ve-accent focus:ring-1 focus:ring-ve-accent/40 ${disabled ? "bg-ve-disabled" : "bg-white"} ${align === "right" ? "text-right" : ""} ${className}`}
     />
   );
 }
+
+/* Bare cell input used inside mini grids */
+function CellInput({
+  value = "",
+  align = "left",
+}: {
+  value?: string;
+  align?: "left" | "right";
+}) {
+  return (
+    <input
+      defaultValue={value}
+      className={`h-[20px] w-full min-w-0 bg-transparent px-1.5 text-[12px] tabular-nums text-ve-text outline-none focus:bg-white focus:ring-1 focus:ring-ve-accent/40 ${align === "right" ? "text-right" : ""}`}
+    />
+  );
+}
+
 
 function Select({ value = "" }: { value?: string }) {
   return (
@@ -149,33 +165,43 @@ function Toolbar() {
 
 function DurationGrid() {
   const heads = ["Dur.", "Unit", "-Days", "+Days", "E/L Redel."];
+  const cols = "grid-cols-[0.85fr_0.85fr_0.7fr_0.7fr_minmax(0,1.6fr)]";
   return (
     <div className="mt-1 flex">
-      <div className="w-[46px] shrink-0" />
+      <div className="w-[40px] shrink-0" />
       <div className="min-w-0 flex-1 border border-ve-border">
-        <div className="grid grid-cols-[80px_90px_80px_80px_1fr] bg-ve-sectionBg text-[12px] font-medium text-ve-text">
+        <div className={`grid ${cols} bg-ve-sectionBg text-[12px] font-medium text-ve-text`}>
           {heads.map((h) => (
-            <div key={h} className="border-r border-ve-border px-1.5 py-[2px] last:border-r-0">
+            <div key={h} className="min-w-0 truncate border-r border-ve-border px-1.5 py-[2px] last:border-r-0">
               {h}
             </div>
           ))}
         </div>
         {(["Min", "Max"] as const).map((r) => (
-          <div key={r} className="relative grid grid-cols-[80px_90px_80px_80px_1fr] border-t border-ve-border">
-            <span className="absolute -left-[42px] top-[3px] text-[12px] text-ve-label">{r}</span>
-            <div className="border-r border-ve-border px-1.5 py-[2px] text-right text-[12px] tabular-nums">
-              0
+          <div key={r} className={`relative grid ${cols} border-t border-ve-border`}>
+            <span className="absolute -left-[36px] top-[2px] text-[12px] text-ve-label">{r}</span>
+            <div className="min-w-0 border-r border-ve-border">
+              <CellInput value="0" align="right" />
             </div>
-            <div className="border-r border-ve-border py-[2px]">&nbsp;</div>
-            <div className="border-r border-ve-border py-[2px]">&nbsp;</div>
-            <div className="border-r border-ve-border py-[2px]">&nbsp;</div>
-            <div className="py-[2px]">&nbsp;</div>
+            <div className="min-w-0 border-r border-ve-border">
+              <CellInput />
+            </div>
+            <div className="min-w-0 border-r border-ve-border">
+              <CellInput align="right" />
+            </div>
+            <div className="min-w-0 border-r border-ve-border">
+              <CellInput align="right" />
+            </div>
+            <div className="min-w-0">
+              <CellInput />
+            </div>
           </div>
         ))}
       </div>
     </div>
   );
 }
+
 
 /* ---------- Delivery / Redelivery ---------- */
 
@@ -197,31 +223,26 @@ function DeliveryGrid() {
               key={r}
               className="relative grid grid-cols-[220px_130px_130px_140px_1fr] border-t border-ve-border"
             >
-              <span className="absolute -left-[80px] top-[3px] w-[74px] text-right text-[12px] text-ve-label">
+              <span className="absolute -left-[80px] top-[2px] w-[74px] text-right text-[12px] text-ve-label">
                 {r}
               </span>
-              <div className="border-r border-ve-border py-[2px]">&nbsp;</div>
-              <div className="border-r border-ve-border py-[2px]">&nbsp;</div>
-              <div className="border-r border-ve-border py-[2px]">&nbsp;</div>
-              <div className="border-r border-ve-border px-1.5 py-[2px] text-right text-[12px] tabular-nums">
-                0.00
-              </div>
-              <div className="py-[2px]">&nbsp;</div>
+              <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+              <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+              <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+              <div className="min-w-0 border-r border-ve-border"><CellInput value="0.00" align="right" /></div>
+              <div className="min-w-0"><CellInput /></div>
             </div>
           ))}
           <div className="relative grid grid-cols-[220px_130px_130px_140px_1fr] border-t border-ve-border">
-            <span className="absolute -left-[180px] top-[3px] w-[174px] text-right text-[12px] text-ve-label">
+            <span className="absolute -left-[180px] top-[2px] w-[174px] text-right text-[12px] text-ve-label">
               Duration/Basis (days)
             </span>
-            <div className="border-r border-ve-border px-1.5 py-[2px] text-right text-[12px] tabular-nums">
-              0.0000
-            </div>
-            <div className="border-r border-ve-border px-1.5 py-[2px] text-right text-[12px] tabular-nums">
-              0.0000
-            </div>
-            <div className="border-r border-ve-border px-1.5 py-[2px] text-[12px]">Min</div>
-            <div className="border-r border-ve-border py-[2px]">&nbsp;</div>
-            <div className="py-[2px]">&nbsp;</div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput value="0.0000" align="right" /></div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput value="0.0000" align="right" /></div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput value="Min" /></div>
+            <div className="min-w-0 border-r border-ve-border"><CellInput /></div>
+            <div className="min-w-0"><CellInput /></div>
+
           </div>
         </div>
       </div>
@@ -380,8 +401,8 @@ function TcoFixture() {
         <div className="flex">
           <div className="min-w-0 flex-1">
             {/* Header fields */}
-            <div className="flex gap-4 px-2 pt-2">
-              <div className="min-w-0 flex-1">
+            <div className="flex gap-3 px-2 pt-2">
+              <div className="min-w-0 flex-[0.72]">
                 <Field label="Vessel"><Select /></Field>
                 <Field label="TC Code"><Input disabled /></Field>
                 <Field label="Charterer"><Input /></Field>
@@ -390,7 +411,7 @@ function TcoFixture() {
                 <Field label="Laycan To"><Input /></Field>
               </div>
 
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0 flex-[0.78]">
                 <Field label="Date/Fixed By">
                   <div className="flex gap-1">
                     <Input />
@@ -413,7 +434,8 @@ function TcoFixture() {
                 <Field label="Conf Date GMT"><Input disabled /></Field>
               </div>
 
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0 flex-[1.5]">
+
                 <Field label="Status" labelWidth="w-40"><Input value="OPPORTUNITY" /></Field>
                 <Field label="Billing Period" labelWidth="w-40"><Input /></Field>
                 <Field label="Billing Schedule" labelWidth="w-40"><Input value="IN ADVANCE" /></Field>
