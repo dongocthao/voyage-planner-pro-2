@@ -431,7 +431,14 @@ function TcoFixture() {
                     <Input />
                   </div>
                 </Field>
+
+                {/* Duration + Delivery grids aligned with Ref No. / Payment Terms inputs */}
+                <div className="pl-[134px] pt-1">
+                  <DurationGrid />
+                  <DeliveryGrid />
+                </div>
               </div>
+
 
               <div className="min-w-0 flex-1">
                 <Field label="Status" labelWidth="w-40"><Input value="OPPORTUNITY" /></Field>
@@ -452,14 +459,7 @@ function TcoFixture() {
               </div>
             </div>
 
-            {/* Duration + Delivery grids: span center + right blocks */}
-            <div className="flex gap-3 px-2 pt-2">
-              <div className="min-w-0 flex-1" />
-              <div className="min-w-0 flex-[2] pl-[134px]">
-                <DurationGrid />
-                <DeliveryGrid />
-              </div>
-            </div>
+
 
             <TabsSection />
           </div>
