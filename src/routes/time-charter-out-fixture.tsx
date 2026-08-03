@@ -459,14 +459,7 @@ function TcoFixture() {
               </div>
             </div>
 
-            {/* Duration + Delivery grids: span center + right blocks */}
-            <div className="flex gap-3 px-2 pt-2">
-              <div className="min-w-0 flex-1" />
-              <div className="min-w-0 flex-[2] pl-[134px]">
-                <DurationGrid />
-                <DeliveryGrid />
-              </div>
-            </div>
+
 
             <TabsSection />
           </div>
