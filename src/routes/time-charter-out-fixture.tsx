@@ -414,49 +414,53 @@ function TcoFixture() {
                 <Field label="Conf Date GMT"><Input /></Field>
               </div>
 
-              <div className="min-w-0 flex-1">
-                <Field label="Date/Fixed By">
-                  <div className="flex gap-1">
-                    <Input />
-                    <Input />
+              <div className="min-w-0 flex-[2]">
+                <div className="flex min-w-0 gap-3">
+                  <div className="min-w-0 flex-1">
+                    <Field label="Date/Fixed By">
+                      <div className="flex gap-1">
+                        <Input />
+                        <Input />
+                      </div>
+                    </Field>
+                    <Field label="Company"><Input /></Field>
+                    <Field label="Department"><Input /></Field>
+                    <Field label="Trade Area"><Input /></Field>
+                    <Field label="Ref No."><Input /></Field>
+                    <Field label="Payment Terms">
+                      <div className="flex gap-1">
+                        <Input />
+                        <Input />
+                      </div>
+                    </Field>
                   </div>
-                </Field>
-                <Field label="Company"><Input /></Field>
-                <Field label="Department"><Input /></Field>
-                <Field label="Trade Area"><Input /></Field>
-                <Field label="Ref No."><Input /></Field>
-                <Field label="Payment Terms">
-                  <div className="flex gap-1">
-                    <Input />
-                    <Input />
-                  </div>
-                </Field>
 
-                {/* Duration + Delivery grids aligned with Ref No. / Payment Terms inputs */}
+                  <div className="min-w-0 flex-1">
+                    <Field label="Status" labelWidth="w-40"><Input value="OPPORTUNITY" /></Field>
+                    <Field label="Billing Period" labelWidth="w-40"><Input /></Field>
+                    <Field label="Billing Schedule" labelWidth="w-40"><Input value="IN ADVANCE" /></Field>
+                    <Field label="Rebillable Admin Fee %" labelWidth="w-40">
+                      <Input value="0.00" align="right" />
+                    </Field>
+                    <Field label="Currency/Exchange Rate" labelWidth="w-40">
+                      <div className="flex gap-1">
+                        <div className="w-[60px] shrink-0">
+                          <Input value="USD" />
+                        </div>
+                        <Input value="1.000000" align="right" />
+                      </div>
+                    </Field>
+                    <Field label="Ref Contract" labelWidth="w-40"><Input /></Field>
+                  </div>
+                </div>
+
+                {/* Duration + Delivery grids span centre + right blocks */}
                 <div className="pl-[134px] pt-1">
                   <DurationGrid />
                   <DeliveryGrid />
                 </div>
               </div>
 
-
-              <div className="min-w-0 flex-1">
-                <Field label="Status" labelWidth="w-40"><Input value="OPPORTUNITY" /></Field>
-                <Field label="Billing Period" labelWidth="w-40"><Input /></Field>
-                <Field label="Billing Schedule" labelWidth="w-40"><Input value="IN ADVANCE" /></Field>
-                <Field label="Rebillable Admin Fee %" labelWidth="w-40">
-                  <Input value="0.00" align="right" />
-                </Field>
-                <Field label="Currency/Exchange Rate" labelWidth="w-40">
-                  <div className="flex gap-1">
-                    <div className="w-[60px] shrink-0">
-                      <Input value="USD" />
-                    </div>
-                    <Input value="1.000000" align="right" />
-                  </div>
-                </Field>
-                <Field label="Ref Contract" labelWidth="w-40"><Input /></Field>
-              </div>
             </div>
 
 
