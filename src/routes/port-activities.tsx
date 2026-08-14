@@ -113,12 +113,12 @@ const ROB_COLS =
   "grid-cols-[70px_repeat(6,minmax(0,1fr))]";
 
 function RobGrid() {
-  const heads = ["Type", "ROB Prev", "Sea Cons", "Cons Rate", "ROB Arr", "Received", "PortCons", "ROB Dep"];
+  const heads = ["Type", "ROB Arrv", "Channel", "Port working", "Port Idle", "Margin", "Received", "ROB Dep"];
   const rows: [string, string][] = [
-    ["IFO", "719.512"],
-    ["LSF", "500.000"],
-    ["LSG", "500.000"],
-    ["MGO", "492.867"],
+    ["VLSFO", "719.512"],
+    ["ULSFO", "500.000"],
+    ["MGO", "500.000"],
+    ["MDO", "492.867"],
   ];
   return (
     <div className="border border-ve-border bg-white">
@@ -176,7 +176,7 @@ function ActivitiesGrid() {
             {h}
           </div>
         ))}
-        {["IFO", "LSO", "MGO", "LSG"].map((h) => (
+        {["VLSFO", "ULSFO", "MGO", "MDO"].map((h) => (
           <div key={h} className="min-w-0 truncate border-r border-ve-border px-1.5 py-[3px] text-right last:border-r-0">
             {h}
           </div>
